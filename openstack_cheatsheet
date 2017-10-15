@@ -1,0 +1,98 @@
+# openstack nova neutron
+openstack server list --host cmpt-1-orangeinfra.localdomain --all-projects
+nova list --all >> state ; neutron net-list >> state ; neutron subnet-list >> state ; neutron port-list >> state; neutron router-list >> state ;ip netns >> state; nova secgroup-list >> state # log
+
+curl -s -d "{\"auth\":{\"passwordCredentials\": {\"username\": \"admin\", \"password\": \"$OS_PASSWORD\"}, \"tenantName\": \"admin\"}}" -H "Content-type: application/json" $OS_AUTH_URL/tokens | jq -r '.access.token.id' # | python -mjson.tool  # curl log openstack keystone
+curl -s -H "X-Auth-Token: $token"  https://$ip | python -m json.tool # curl log openstack keystone
+
+neutron port-create private-net --allowed-address-pairs type=dict list=true ip_address=10.0.0.104
+neutron port-create remus-private-net --allowed-address-pairs type=dict list=true ip_address=10.1.1.104,mac_address=fa:16:3e:67:9b:d7 ip_address=10.1.1.105,mac_address=fa:16:3e:67:9b:d8
+neutron port-create Internet_Production --fixed-ip ip_address=10.171.53.173 --allowed-address-pairs type=dict list=true ip_address=10.171.53.171
+
+
+nova boot --availability-zone nova:c2-r17-u12 --flavor m1.tiny --image cirros-0 --nic net-id="b0999ebf-59d8-4bc6-95ac-eb3a9c13553c" test_remus # openstack nova boot availability
+
+neutron port-create Internet_Production --fixed-ip ip_address=10.114.27.75 --tenant-id cf7ef53d5a814c4fb0c3d472ce1a26f2 --allowed-address-pairs type=dict list=true mac_address=fa:16:3e:ef:e5:5b,ip_address=10.114.27.77
+
+wget https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud.qcow2   # wget centos
+glance image-create --name "centos" --is-public true --disk-format qcow2 --container-format bare --progress --file CentOS-7-x86_64-GenericCloud.qcow2 # openstack glance create centos
+
+wget http://download.cirros-cloud.net/0.3.5/cirros-0.3.5-x86_64-disk.img # wget cirros
+glance image-create --name "cirros" --is-public true --disk-format qcow2 --container-format bare --progress --file cirros-0.3.5-x86_64-disk.img # openstack glance create cirros
+
+nova secgroup-create secgrp "sec grp" # nova security-group
+nova secgroup-add-rule secgrp icmp -1 -1 0.0.0.0/0  # openstack nova security-group
+nova secgroup-add-rule secgrp tcp 22 22 0.0.0.0/0  # openstack nova security-group
+
+nova secgroup-add-rule default icmp -1 -1 0.0.0.0/0  # openstack nova security-group
+nova secgroup-add-rule default tcp 22 22 0.0.0.0/0  # openstack nova security-group
+nova secgroup-add-rule default tcp 80 80 0.0.0.0/0  # openstack nova security-group
+nova secgroup-add-rule default tcp 443 443 0.0.0.0/0  # openstack nova security-group
+nova keypair-add --pub-key .ssh/id_rsa.pub mykey  # openstack nova keypair
+
+#openstack network create public --external --provider-network-type flat --provider-physical-network datacentre # openstack neutron create network
+openstack subnet create public --network public --dhcp --allocation-pool start=10.1.1.51,end=10.1.1.250 --gateway 10.1.1.1 --subnet-range 10.1.1.0/24 # openstack neutron create subnet
+openstack network create private-net --provider-network-type vxlan # openstack neutron create network
+openstack subnet create private-subnet --network private-net --subnet-range 10.0.1.0/24 --dhcp #--dns-nameservers list=true 8.8.8.8 8.8.4.4 # openstack neutron create subnet
+
+
+neutron net-create --router:external --provider:network_type flat --provider:physical_network datacentre public # neutron network flat
+neutron net-create Internet_Production --provider:network_type vlan --provider:physical_network datacentre --provider:segmentation_id 201 # neutron network vlan
+
+neutron subnet-create --name subnet_Internet_Production Internet_Production --disable-dhcp --gateway 10.114.27.94 10.114.27.64/27 --name public-subnet
+neutron subnet-create public --dns-nameserver 8.8.8.8 --enable-dhcp --allocation-pool start=10.1.1.51,end=10.1.1.250 --gateway 10.1.1.1 10.1.1.0/24 --name public-subnet
+
+###
+neutron net-create private-net --provider:network_type vxlan
+subnet="10.0.0"
+neutron subnet-create private-net --dns-nameserver 8.8.8.8 --enable-dhcp --allocation-pool start=$subnet.60,end=$subnet.100 --gateway $subnet.1 $subnet.0/24 --name private-subnet
+
+neutron net-create --router:external --provider:network_type flat --provider:physical_network datacentre public
+subnet="192.168.4"
+neutron subnet-create public --dns-nameserver $subnet.5 --enable-dhcp --allocation-pool start=$subnet.160,end=$subnet.200 --gateway $subnet.1 $subnet.0/24 --name public-subnet
+
+neutron net-create Internet_Production --provider:network_type vlan --provider:physical_network datacentre --provider:segmentation_id 761 # neutron network vlan
+subnet="10.104.26"
+neutron subnet-create Internet_Production --enable-dhcp --allocation-pool start=$subnet.104,end=$subnet.107 --gateway $subnet.97 $subnet.96/28 --name Internet_Production_subnet
+
+neutron router-create external-router
+neutron router-interface-add external-router private-subnet
+neutron router-interface-add external-router Internet_Production_subnet
+neutron router-gateway-set external-router public # openstack neutron create subnet
+
+
+
+
+
+
+
+openstack router create external-router # openstack neutron create router
+openstack router add subnet external-router priv_subnet_id # openstack neutron router
+openstack router set external-router --route destination=0.0.0.0/0,gateway=192.168.122.1 # openstack neutron create subnet
+
+
+
+openstack flavor create m1.small --id 1 --ram 512 --disk 10 --vcpus 1 # openstack flavor create
+
+nova boot --image cirros --flavor m1.small --security-groups default --key-name mykey --nic net-id= myvm # openstack nova boot
+
+nova floating-ip-create  # openstack nova floating
+nova floating-ip-associate myvm 10.1.1.53 # openstack nova floating
+
+
+nova interface-attach --port-id id vm_name # openstack nova interface attach
+
+
+
+sed -i 's/^service_plugins.*/service_plugins =router,qos,lbaas/g' /etc/neutron/neutron.conf
+systemctl restart neutron-server.service
+
+sed -i 's/\x27enable_lb.*/    \x27enable_lb\x27: True,/g' /etc/openstack-dashboard/local_settings
+systemctl restart httpd.service
+
+sed -i 's/^# interface_driver =$/interface_driver = neutron.agent.linux.interface.OVSInterfaceDriver/g' /etc/neutron/lbaas_agent.ini
+sed -i 's/^# device_driver = n.*/device_driver=neutron.services.loadbalancer.drivers.haproxy.namespace_driver.HaproxyNSDriver/g' /etc/neutron/lbaas_agent.ini
+sed -i 's/# user_group.*/user_group=haproxy/g' /etc/neutron/lbaas_agent.ini
+systemctl restart neutron-lbaas-agent.service
+
+neutron port-create Internet_Production --fixed-ip ip_address=10.114.27.75 --tenand-id cf7ef53d5a814c4fb0c3d472ce1a26f2 --allowed-address-pairs type=dict list=true ip_address=10.114.27.77
