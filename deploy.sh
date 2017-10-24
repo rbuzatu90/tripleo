@@ -4,9 +4,13 @@ RC_FILE=
 CUSTOMIZED_TEMPLATES=
 ORIGINAL_TEMPLATES=
 
-time openstack overcloud deploy -e 
 
-
+time openstack overcloud deploy --templates \
+  -e ~/templates/node-info.yaml\
+  -e /usr/share/openstack-tripleo-heat-templates/environments/network-isolation.yaml \
+  -e ~/templates/network-environment.yaml \
+#  -e ~/templates/storage-environment.yaml \
+  --ntp-server pool.ntp.org \
 
 
 
