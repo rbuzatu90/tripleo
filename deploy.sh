@@ -4,6 +4,17 @@ RC_FILE=
 CUSTOMIZED_TEMPLATES=
 ORIGINAL_TEMPLATES=
 
+rm -rf /var/log/nova/*
+rm -rf /var/log/neutron/*
+rm -rf /var/log/ironic/*
+rm -rf /var/log/mistral/*
+rm -rf /var/log/ceilometer/*
+rm -rf /var/log/glance/*
+rm -rf /var/log/heat/*
+rm -rf /var/log/httpd/*
+rm -rf /var/log/rabbit/*
+rm -rf /var/log/swift/*
+rm -rf /var/log/ironic-inspector/*
 
 time openstack overcloud deploy --templates \
   -e ~/templates/node-info.yaml\
