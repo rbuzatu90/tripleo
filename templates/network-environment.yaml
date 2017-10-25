@@ -11,16 +11,16 @@ parameter_defaults:
   StorageNetCidr: 172.18.0.0/24
   StorageMgmtNetCidr: 172.19.0.0/24
   ManagementNetCidr: 172.20.0.0/24
-  ExternalNetCidr: 192.168.122.0/24
+  ExternalNetCidr: 192.168.123.0/24
   InternalApiAllocationPools: [{'start': '172.16.0.10', 'end': '172.16.0.200'}]
   TenantAllocationPools: [{'start': '172.17.0.10', 'end': '172.17.0.200'}]
   StorageAllocationPools: [{'start': '172.18.0.10', 'end': '172.18.0.200'}]
   StorageMgmtAllocationPools: [{'start': '172.19.0.10', 'end': '172.19.0.200'}]
   ManagementAllocationPools: [{'start': '172.20.0.10', 'end': '172.20.0.200'}]
   # Leave room for floating IPs in the External allocation pool
-  ExternalAllocationPools: [{'start': '192.168.122.10', 'end': '192.168.122.100'}]
+  ExternalAllocationPools: [{'start': '192.168.123.10', 'end': '192.168.123.100'}]
   # Set to the router gateway on the external network
-  ExternalInterfaceDefaultRoute: 192.168.122.1
+  ExternalInterfaceDefaultRoute: 192.168.123.1
   # Gateway router for the provisioning network (or Undercloud IP)
   ControlPlaneDefaultRoute: 10.0.0.1
   # The IP address of the EC2 metadata server. Generally the IP of the Undercloud
