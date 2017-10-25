@@ -1,0 +1,26 @@
+{
+  "nodes": [
+    {
+      "name": "controller01",
+      "capabilities": "profile:control,boot_option:local",
+      "pm_type": "pxe_ssh",
+      "pm_user": "root",
+      "pm_addr": "192.168.122.1",
+      "mac": [
+        "52:54:00:ca:a8:64"
+      ],
+      "pm_password": "-----BEGIN RSA PRIVATE KEY-----\nMIICXAIBAAKBgQD4kQ9zdK90t5rYDB+1UMe54J/A/2OsHj5Lu54rW65l5kzpr/ub\nmfr+9GklligpOwYPrEdMhCk5RMixLwn1e1ulxzJRbCa73PtA14fo+DvP0Wf/shRX\nBUMFT34g58I156tgVGqlYsJLfY6sUDmOU55558stzwgFhZVttsS9Vd/iSQIDAQAB\nAoGAVY2wML//x/+OB0CdBU5JgDvFIKuGhe5e6Lgp56iFrUMIRAKzakokbu525l35\ncr+DBY/5dmeivLhlDz8ugVS1JPt1mwhunLW7Xx/rtq7JiSrLyoo2fwiUgH2aCpx0\naHP9ZvEfiFAZBVAhRHrc2BTT5BGAYLKkv6x4qg6feFZgaPUCQQD8uY2H4HtzImaA\n4UTGS3dCoMAdlVlIw/xp97dnQlN4fJL4p3hnnheBjruPCTj1plGk+M9O75wGI2/y\nUkVzKTPTAkEA+8m2VEVJC9HIuLJwAa4orwtILr2CmTemCLZb/bDBJKH5Dr4WHe8K\nIKC5/n4Y/nTOCCRos/GptUf+bwdEDmvr8wJAI1qRwgBVRLX7QOxCgrrr5BY4yeqq\notNH7EsLDRbqNmC27rH+1f/3qdgdxNS1cyfhJALqfVBnszQh5PQ9Yu7QoQJAPd3P\nTh+EFkJipnc5rEAFwRTtlIZ+G3Wf904PhmMy4fRmhOfR+WLtwxya9tw2+fbrVPbV\nPzmm8GMTMma/oyeDXwJBAILpncG77g5Dkmfzv1C8chUHomzugyt9bjMBgnd+FufQ\ngEcdSexD/dnF24goY3MrmlkkAqH5BaMGG2AzYLtsJjY=\n-----END RSA PRIVATE KEY-----"
+    },
+    {
+      "name": "compute01",
+      "capabilities": "profile:compute,boot_option:local",
+      "pm_type": "pxe_ssh",
+      "pm_user": "root",
+      "pm_addr": "192.168.122.1",
+      "mac": [
+        "52:54:00:7a:06:28"
+      ],
+      "pm_password": "-----BEGIN RSA PRIVATE KEY-----\nMIICXAIBAAKBgQD4kQ9zdK90t5rYDB+1UMe54J/A/2OsHj5Lu54rW65l5kzpr/ub\nmfr+9GklligpOwYPrEdMhCk5RMixLwn1e1ulxzJRbCa73PtA14fo+DvP0Wf/shRX\nBUMFT34g58I156tgVGqlYsJLfY6sUDmOU55558stzwgFhZVttsS9Vd/iSQIDAQAB\nAoGAVY2wML//x/+OB0CdBU5JgDvFIKuGhe5e6Lgp56iFrUMIRAKzakokbu525l35\ncr+DBY/5dmeivLhlDz8ugVS1JPt1mwhunLW7Xx/rtq7JiSrLyoo2fwiUgH2aCpx0\naHP9ZvEfiFAZBVAhRHrc2BTT5BGAYLKkv6x4qg6feFZgaPUCQQD8uY2H4HtzImaA\n4UTGS3dCoMAdlVlIw/xp97dnQlN4fJL4p3hnnheBjruPCTj1plGk+M9O75wGI2/y\nUkVzKTPTAkEA+8m2VEVJC9HIuLJwAa4orwtILr2CmTemCLZb/bDBJKH5Dr4WHe8K\nIKC5/n4Y/nTOCCRos/GptUf+bwdEDmvr8wJAI1qRwgBVRLX7QOxCgrrr5BY4yeqq\notNH7EsLDRbqNmC27rH+1f/3qdgdxNS1cyfhJALqfVBnszQh5PQ9Yu7QoQJAPd3P\nTh+EFkJipnc5rEAFwRTtlIZ+G3Wf904PhmMy4fRmhOfR+WLtwxya9tw2+fbrVPbV\nPzmm8GMTMma/oyeDXwJBAILpncG77g5Dkmfzv1C8chUHomzugyt9bjMBgnd+FufQ\ngEcdSexD/dnF24goY3MrmlkkAqH5BaMGG2AzYLtsJjY=\n-----END RSA PRIVATE KEY-----"
+    }
+  ]
+}
