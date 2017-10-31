@@ -2,9 +2,7 @@ heat_template_version: 2015-04-30
 
 description: >
   Software Config to drive os-net-config with 2 bonded nics on a bridge
-  with VLANs attached for the controller role with IPv6 on the External
-  network. The IPv6 default route is on the External network, and the
-  IPv4 default route is on the Control Plane.
+  with VLANs attached for the compute role.
 
 parameters:
   ControlPlaneIp:
@@ -36,7 +34,7 @@ parameters:
     description: IP address/subnet on the management network
     type: string
   BondInterfaceOvsOptions:
-    default: 'bond_mode=active-backup'
+    default: ''
     description: The ovs_options string for the bond interface. Set things like
                  lacp=active and/or bond_mode=balance-slb using this option.
     type: string
@@ -76,9 +74,9 @@ parameters:
   ControlPlaneDefaultRoute: # Override this via parameter_defaults
     description: The default route of the control plane network.
     type: string
-  ExternalInterfaceDefaultRoute:
+  ExternalInterfaceDefaultRoute: # Not used by default in this template
     default: '10.0.0.1'
-    description: default route for the external network
+    description: The default route of the external network.
     type: string
   ManagementInterfaceDefaultRoute: # Commented out by default in this template
     default: unset
@@ -104,6 +102,7 @@ resources:
               type: interface
               name: nic1
               use_dhcp: false
+              dns_servers: {get_param: DnsServers}
               addresses:
                 -
                   ip_netmask:
@@ -115,71 +114,37 @@ resources:
                 -
                   ip_netmask: 169.254.169.254/32
                   next_hop: {get_param: EC2MetadataIp}
-                # IPv4 Default Route
                 -
                   default: true
                   next_hop: {get_param: ControlPlaneDefaultRoute}
             -
               type: ovs_bridge
               name: {get_input: bridge_name}
-              dns_servers: {get_param: DnsServers}
               members:
                 -
-                  type: ovs_bond
-                  name: bond1
-                  ovs_options: {get_param: BondInterfaceOvsOptions}
-                  members:
-                    -
-                      type: interface
-                      name: nic2
-                      primary: true
-                    -
-                      type: interface
-                      name: nic3
+                  type: interface
+                  name: nic2
                 -
                   type: vlan
-                  device: bond1
-                  vlan_id: {get_param: ExternalNetworkVlanID}
-                  addresses:
-                    -
-                      ip_netmask: {get_param: ExternalIpSubnet}
-                  routes:
-                    # IPv6 Default Route
-                    -
-                      default: true
-                      next_hop: {get_param: ExternalInterfaceDefaultRoute}
-                -
-                  type: vlan
-                  device: bond1
                   vlan_id: {get_param: InternalApiNetworkVlanID}
                   addresses:
                     -
                       ip_netmask: {get_param: InternalApiIpSubnet}
                 -
                   type: vlan
-                  device: bond1
                   vlan_id: {get_param: StorageNetworkVlanID}
                   addresses:
                     -
                       ip_netmask: {get_param: StorageIpSubnet}
                 -
                   type: vlan
-                  device: bond1
-                  vlan_id: {get_param: StorageMgmtNetworkVlanID}
-                  addresses:
-                    -
-                      ip_netmask: {get_param: StorageMgmtIpSubnet}
-                -
-                  type: vlan
-                  device: bond1
                   vlan_id: {get_param: TenantNetworkVlanID}
                   addresses:
                     -
                       ip_netmask: {get_param: TenantIpSubnet}
                 # Uncomment when including environments/network-management.yaml
                 # If setting default route on the Management interface, comment
-                # out the default route on the External interface. This will
-                # make the External API unreachable from remote subnets.
+                # out the default route on the Control Plane.
                 #-
                 #  type: vlan
                 #  device: bond1

@@ -1,9 +1,10 @@
 resource_registry:
-  OS::TripleO::BlockStorage::Net::SoftwareConfig: /root/templates/nic-configs/cinder-storage.yaml
-  OS::TripleO::Compute::Net::SoftwareConfig: /root/templates/nic-configs/compute.yaml
-  OS::TripleO::Controller::Net::SoftwareConfig: /root/templates/nic-configs/controller.yaml
-  OS::TripleO::ObjectStorage::Net::SoftwareConfig: /root/templates/nic-configs/swift-storage.yaml
-  OS::TripleO::CephStorage::Net::SoftwareConfig: /root/templates/nic-configs/ceph-storage.yaml
+  OS::TripleO::BlockStorage::Net::SoftwareConfig: ./bond-with-vlans/cinder-storage.yaml
+  OS::TripleO::Compute::Net::SoftwareConfig: ./bond-with-vlans/compute.yaml
+  OS::TripleO::Controller::Net::SoftwareConfig: ./bond-with-vlans/controller.yaml
+  OS::TripleO::ObjectStorage::Net::SoftwareConfig: ./bond-with-vlans/swift-storage.yaml
+  OS::TripleO::CephStorage::Net::SoftwareConfig: ./bond-with-vlans/ceph-storage.yaml
+#  OS::TripleO::NodeExtraConfigPost: /root/tripleo/postdeploy-tasks.yaml
 
 parameter_defaults:
   InternalApiNetCidr: 172.16.0.0/24

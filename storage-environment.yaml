@@ -10,7 +10,7 @@ resource_registry:
   OS::TripleO::Services::SwiftStorage: OS::Heat::None
   OS::TripleO::Services::SwiftRingBuilder: OS::Heat::None
   OS::TripleO::Services::CinderBackup: /usr/share/openstack-tripleo-heat-templates/puppet/services/pacemaker/cinder-backup.yaml
-  OS::TripleO::NodeUserData: /root/templates/firstboot/wipe-disks.yaml
+  #OS::TripleO::NodeUserData: /root/templates/firstboot/wipe-disks.yaml
 
 
 parameter_defaults:
@@ -24,17 +24,17 @@ parameter_defaults:
   ## Whether to enable iscsi backend for Cinder.
   CinderEnableIscsiBackend: false
   ## Whether to enable rbd (Ceph) backend for Cinder.
-  CinderEnableRbdBackend: true
+  CinderEnableRbdBackend: false
   ## Cinder Backup backend can be either 'ceph' or 'swift'.
-  CinderBackupBackend: ceph
+  CinderBackupBackend: swift
   ## Whether to enable NFS backend for Cinder.
   CinderEnableNfsBackend: false
   ## Whether to enable rbd (Ceph) backend for Nova ephemeral storage.
-  NovaEnableRbdBackend: true
+  NovaEnableRbdBackend: false
   ## Glance backend can be either 'rbd' (Ceph), 'swift' or 'file'.
-  GlanceBackend: rbd
+  GlanceBackend: file
   ## Gnocchi backend can be either 'rbd' (Ceph), 'swift' or 'file'.
-  GnocchiBackend: rbd
+  GnocchiBackend: file
 
 
   #### CINDER NFS SETTINGS ####

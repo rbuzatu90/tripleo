@@ -1,0 +1,11 @@
+parameter_defaults:
+  OvercloudControlFlavor: control
+  OvercloudComputeFlavor: compute
+  OvercloudCephStorageFlavor: ceph-storage
+  OvercloudSwiftStorageFlavor: swift-storage
+  OvercloudBlockStorageFlavor: block-storage
+  ControllerCount: 3
+  ComputeCount: 1
+  CephStorageCount: 0
+  SwiftStorageCount: 0
+  BlockStorageCount: 0

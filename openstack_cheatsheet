@@ -99,6 +99,7 @@ neutron port-create Internet_Production --fixed-ip ip_address=10.114.27.75 --ten
 
 
 qemu-system-x86_64 --kernel overcloud-full.vmlinuz --initrd overcloud-full.initrd -m 1024 --append root=/dev/sda --enable-kvm overcloud-full.qcow2
+export LIBGUESTFS_BACKEND=direct
 virt-customize -a overcloud-full.qcow2 --root-password password:test
 virt-customize -a overcloud-full.qcow2 --install opendaylight
 virt-customize -a overcloud-full.qcow2 --upload local_file:remote_file
