@@ -14,11 +14,10 @@ resource_registry:
 
 
 parameter_defaults:
-  CinderBackupBackend: swift
 
-  ExtraConfig:
-    ceph::profile::params::osds:
-      '/dev/sdb': {}
+  #ExtraConfig:
+  #  ceph::profile::params::osds:
+  #    '/dev/sdb': {}
   #### BACKEND SELECTION ####
 
   ## Whether to enable iscsi backend for Cinder.
