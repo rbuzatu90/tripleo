@@ -26,6 +26,8 @@ time openstack overcloud deploy --templates \
     -e $NETWORK_ISOLATION \
     -e $NETWORK_ENVIRONMENT \
     -e $STORAGE_ENVIRONMENT \
+    -e postdeploy/postdeploy-tasks.yaml
+    -e timezone.yaml
     --verbose \
     --ntp-server pool.ntp.org
 

@@ -10,7 +10,7 @@ resources:
     type: OS::Heat::SoftwareConfig
     properties:
       group: script
-      config: {get_file: /root/tripleo/node-setup.sh}
+      config: {get_file: /root/tripleo/postdeploy/postdeploy-tasks.sh}
 
   SomeExtraConfig:
     type: OS::Heat::SoftwareDeployments
