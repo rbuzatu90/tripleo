@@ -76,6 +76,7 @@ openstack flavor create m1.small --id 1 --ram 512 --disk 10 --vcpus 1 # openstac
 
 nova boot --image cirros --flavor m1.small --security-groups default --key-name mykey --nic net-id= myvm # openstack nova boot
 
+
 nova floating-ip-create  # openstack nova floating
 nova floating-ip-associate myvm 10.1.1.53 # openstack nova floating
 
@@ -97,6 +98,8 @@ systemctl restart neutron-lbaas-agent.service
 
 neutron port-create Internet_Production --fixed-ip ip_address=10.114.27.75 --tenand-id cf7ef53d5a814c4fb0c3d472ce1a26f2 --allowed-address-pairs type=dict list=true ip_address=10.114.27.77
 
+neutron port-update --no-security-groups <port id>
+neutron port-update  --port-security-enabled=False <port id>
 
 qemu-system-x86_64 --kernel overcloud-full.vmlinuz --initrd overcloud-full.initrd -m 1024 --append root=/dev/sda --enable-kvm overcloud-full.qcow2
 export LIBGUESTFS_BACKEND=direct
