@@ -6,7 +6,27 @@ resource_registry:
   OS::TripleO::CephStorage::Net::SoftwareConfig: ./nic-config/ceph-storage.yaml
   OS::TripleO::NodeExtraConfigPost: /root/tripleo/postdeploy/postdeploy-tasks.yaml
 
+  OS::TripleO::Network::Ports::NetVipMap: /usr/share/openstack-tripleo-heat-templates/network/ports/net_vip_map_external.yaml
+  OS::TripleO::Network::Ports::ExternalVipPort: /usr/share/openstack-tripleo-heat-templates/network/ports/noop.yaml
+  OS::TripleO::Network::Ports::InternalApiVipPort: /usr/share/openstack-tripleo-heat-templates/network/ports/noop.yaml
+  OS::TripleO::Network::Ports::StorageVipPort: /usr/share/openstack-tripleo-heat-templates/network/ports/noop.yaml
+  OS::TripleO::Network::Ports::StorageMgmtVipPort: /usr/share/openstack-tripleo-heat-templates/network/ports/noop.yaml
+  OS::TripleO::Network::Ports::RedisVipPort: /usr/share/openstack-tripleo-heat-templates/network/ports/from_service.yaml
+
 parameter_defaults:
+  ControllerHostnameFormat: 'ctrl-%index%-orangeinfra'
+  ComputeHostnameFormat: 'cmpt-%index%-orangeinfra'
+
+  ExternalNetworkVip: 192.168.123.9
+  InternalApiNetworkVip: 172.16.0.9
+  ControlPlaneIP: 10.0.0.9
+  StorageNetworkVip: 172.18.0.9
+  StorageMgmtNetworkVip: 172.19.0.10
+  ServiceVips:
+    redis: 172.16.0.8
+  controllerExtraConfig:
+    neutron::agents::metadata::auth_url: http://10.0.0.81:35357/v2.0
+
   InternalApiNetCidr: 172.16.0.0/24
   TenantNetCidr: 172.17.0.0/24
   StorageNetCidr: 172.18.0.0/24
@@ -39,3 +59,12 @@ parameter_defaults:
   # Customize bonding options if required
 #  BondInterfaceOvsOptions:
 #    "bond_mode=balance-tcp"
+#
+#parameters:
+#  controller_classes:
+#    - neutron::policy
+#  neutron::policy::policies:
+#    reserve_ips:
+#      key: 'create_port:fixed_ips'
+#      value: 'rule:context_is_advsvc or rule:admin_or_network_owner or rule:regular_user'
+#  NeutronEnableIsolatedMetadata: true
