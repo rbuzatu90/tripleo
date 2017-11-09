@@ -23,6 +23,7 @@ parameter_defaults:
   ControlPlaneIP: 192.168.2.25
   StorageNetworkVip: 172.18.0.9
   StorageMgmtNetworkVip: 172.19.0.10
+  PublicVirtualFixedIPs: [{'ip_address':'192.168.122.101'}]
   ServiceVips:
     redis: 172.16.0.8
   controllerExtraConfig:
@@ -58,8 +59,7 @@ parameter_defaults:
   # Set to "br-ex" if using floating IPs on native VLAN on bridge br-ex
   NeutronExternalNetworkBridge: "''"
   # Customize bonding options if require
-  nova_nfs_ip: "192.168.122.1"
-  nova_nfs_export_name: '/data/exports/nova'
+  nova_nfs_export: "192.168.122.1:/data/exports/nova"
 
   glance_nfs_export: '192.168.122.1:/data/exports/glance'
 

@@ -5,9 +5,7 @@ description: Nova on NFS
 parameters:
    server:
      type: string
-   nova_nfs_ip:
-     type: string
-   nova_nfs_export_name:
+   nova_nfs_export:
      type: string
 
 resources:
@@ -23,11 +21,10 @@ resources:
              chown nova:nova /var/lib/nova/instances
              chmod 775 /var/lib/nova/instances
              setsebool -P virt_use_nfs 1
-             echo "_NFS_IP_:_NFS_EXPORT_NAME_ /var/lib/nova/instances nfs rw 0 2" >> /etc/fstab
+             echo "_NOVA_NFS_EXPORT_ /var/lib/nova/instances nfs rw 0 2" >> /etc/fstab
              mount -a
            params:
-              _NFS_IP_: {get_param: nova_nfs_ip}
-              _NFS_EXPORT_NAME_: {get_param: nova_nfs_export_name}
+              _NOVA_NFS_EXPORT_: {get_param: nova_nfs_export}
 
    ExtraPreDeployment:
      type: OS::Heat::SoftwareDeployment

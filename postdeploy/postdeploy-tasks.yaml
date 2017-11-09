@@ -7,6 +7,8 @@ description: >
 parameters:
   servers:
     type: json
+  glance_nfs_export:
+    type: string
 
 resources:
 
@@ -14,6 +16,8 @@ resources:
     type: OS::Heat::SoftwareConfig
     properties:
       group: script
+      inputs:
+         - name: GLANCE_NFS_EXPORT
       config: {get_file: /root/tripleo/postdeploy/postdeploy-tasks.sh}
 
   SomeExtraConfig:
@@ -22,3 +26,5 @@ resources:
       servers:  {get_param: servers}
       config: {get_resource: SomeExtraConfigScript}
       actions: ['CREATE', 'UPDATE']
+      input_values:
+         GLANCE_NFS_EXPORT: {get_param: glance_nfs_export}

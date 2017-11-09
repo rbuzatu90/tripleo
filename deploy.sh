@@ -7,6 +7,8 @@ TOPOLOGY_FILE=$BASE_DIR/1compute3controller.yaml
 NETWORK_ISOLATION=/usr/share/openstack-tripleo-heat-templates/environments/network-isolation.yaml
 NETWORK_ENVIRONMENT=$BASE_DIR/network-environment.yaml
 STORAGE_ENVIRONMENT=$BASE_DIR/storage-environment.yaml
+ENABLE_TLS=$BASE_DIR/enable-tls.yaml
+INJECT_TRUST_ANCHOR=$BASE_DIR/inject-trust-anchor.yaml
 
 # Log cleaning 
 rm -rf /var/log/nova/*
@@ -25,6 +27,8 @@ rm -rf /var/log/ironic-inspector/*
 time openstack overcloud deploy --templates \
     -e $TOPOLOGY_FILE \
     -e $NETWORK_ISOLATION \
+    -e $ENABLE_TLS \
+    -e $INJECT_TRUST_ANCHOR \
     -e $NETWORK_ENVIRONMENT \
     -e $STORAGE_ENVIRONMENT \
     -e timezone.yaml \

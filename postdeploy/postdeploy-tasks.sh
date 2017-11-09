@@ -1,11 +1,8 @@
 #!/bin/bash
 # A heat-config-script which runs post-deploy actions for Cinder and Glance NetApp configuration.
 # Inputs:
-#   NETAPP_ID - ID of NetApp
-#   NETAPP_IP - IP of the NetApp
-#   NETAPP_EXPORT_FOLDER - Share folder name of NetApp for Glance
 #   UNDERCLOUD_IP - IP of the Undercloud
-#   OFFLOAD_BIN - Name of the Copy Offload binary
+#   glance_nfs_export - Name of the Copy Offload binary
 
 echo "Post deploy" > /root/test_file
 sudo timedatectl set-timezone Europe/Bucharest
@@ -34,7 +31,7 @@ if [ $? == 0 ]; then
 cat <<EOF >> /etc/glance/nfs-glance-metadata.json
 {
     "id": "NFS-glance",
-    "share_location": "nfs://$glance_nfs_export",
+    "share_location": "nfs://$GLANCE_NFS_EXPORT",
     "mountpoint":"/var/lib/glance/images",
     "type": "nfs"
 }
