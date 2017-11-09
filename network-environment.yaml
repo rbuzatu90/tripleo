@@ -4,6 +4,7 @@ resource_registry:
   OS::TripleO::Controller::Net::SoftwareConfig: ./nic-config/controller.yaml
   OS::TripleO::ObjectStorage::Net::SoftwareConfig: ./nic-config/swift-storage.yaml
   OS::TripleO::CephStorage::Net::SoftwareConfig: ./nic-config/ceph-storage.yaml
+  OS::TripleO::ComputeExtraConfigPre: /root/tripleo/predeploy/predeploy-tasks.yaml
   OS::TripleO::NodeExtraConfigPost: /root/tripleo/postdeploy/postdeploy-tasks.yaml
 
   OS::TripleO::Network::Ports::NetVipMap: /usr/share/openstack-tripleo-heat-templates/network/ports/net_vip_map_external.yaml
@@ -17,9 +18,9 @@ parameter_defaults:
   ControllerHostnameFormat: 'ctrl-%index%-orangeinfra'
   ComputeHostnameFormat: 'cmpt-%index%-orangeinfra'
 
-  ExternalNetworkVip: 192.168.123.9
+  ExternalNetworkVip: 192.168.122.101
   InternalApiNetworkVip: 172.16.0.9
-  ControlPlaneIP: 10.0.0.9
+  ControlPlaneIP: 192.168.2.25
   StorageNetworkVip: 172.18.0.9
   StorageMgmtNetworkVip: 172.19.0.10
   ServiceVips:
@@ -32,20 +33,20 @@ parameter_defaults:
   StorageNetCidr: 172.18.0.0/24
   StorageMgmtNetCidr: 172.19.0.0/24
   ManagementNetCidr: 172.20.0.0/24
-  ExternalNetCidr: 192.168.123.0/24
+  ExternalNetCidr: 192.168.122.0/24
   InternalApiAllocationPools: [{'start': '172.16.0.10', 'end': '172.16.0.200'}]
   TenantAllocationPools: [{'start': '172.17.0.10', 'end': '172.17.0.200'}]
   StorageAllocationPools: [{'start': '172.18.0.10', 'end': '172.18.0.200'}]
   StorageMgmtAllocationPools: [{'start': '172.19.0.10', 'end': '172.19.0.200'}]
   ManagementAllocationPools: [{'start': '172.20.0.10', 'end': '172.20.0.200'}]
   # Leave room for floating IPs in the External allocation pool
-  ExternalAllocationPools: [{'start': '192.168.123.10', 'end': '192.168.123.100'}]
+  ExternalAllocationPools: [{'start': '192.168.122.200', 'end': '192.168.122.240'}]
   # Set to the router gateway on the external network
-  ExternalInterfaceDefaultRoute: 192.168.123.1
+  ExternalInterfaceDefaultRoute: 192.168.122.1
   # Gateway router for the provisioning network (or Undercloud IP)
-  ControlPlaneDefaultRoute: 10.0.0.1
+  ControlPlaneDefaultRoute: 192.168.2.1
   # The IP address of the EC2 metadata server. Generally the IP of the Undercloud
-  EC2MetadataIp: 10.0.0.1
+  EC2MetadataIp: 192.168.2.1
   # Define the DNS servers (maximum 2) for the overcloud nodes
   DnsServers: ["8.8.8.8","8.8.4.4"]
   InternalApiNetworkVlanID: 201
@@ -56,7 +57,12 @@ parameter_defaults:
   ExternalNetworkVlanID: 206
   # Set to "br-ex" if using floating IPs on native VLAN on bridge br-ex
   NeutronExternalNetworkBridge: "''"
-  # Customize bonding options if required
+  # Customize bonding options if require
+  nova_nfs_ip: "192.168.122.1"
+  nova_nfs_export_name: '/data/exports/nova'
+
+  glance_nfs_export: '192.168.122.1:/data/exports/glance'
+
 #  BondInterfaceOvsOptions:
 #    "bond_mode=balance-tcp"
 #

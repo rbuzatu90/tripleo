@@ -1,0 +1,42 @@
+heat_template_version: 2014-10-16
+
+description: Nova on NFS
+
+parameters:
+   server:
+     type: string
+   nova_nfs_ip:
+     type: string
+   nova_nfs_export_name:
+     type: string
+
+resources:
+   ExtraPreConfig:
+     type: OS::Heat::SoftwareConfig
+     properties:
+       group: script
+       config:
+         str_replace:
+           template: |
+             #!/bin/sh
+             mkdir -p /var/lib/nova/instances
+             chown nova:nova /var/lib/nova/instances
+             chmod 775 /var/lib/nova/instances
+             setsebool -P virt_use_nfs 1
+             echo "_NFS_IP_:_NFS_EXPORT_NAME_ /var/lib/nova/instances nfs rw 0 2" >> /etc/fstab
+             mount -a
+           params:
+              _NFS_IP_: {get_param: nova_nfs_ip}
+              _NFS_EXPORT_NAME_: {get_param: nova_nfs_export_name}
+
+   ExtraPreDeployment:
+     type: OS::Heat::SoftwareDeployment
+     properties:
+       config: {get_resource: ExtraPreConfig}
+       server: {get_param: server}
+       actions: ['CREATE','UPDATE']
+
+outputs:
+   deploy_stdout:
+     description: Deployment reference, used to trigger pre-deploy on changes
+     value: {get_attr: [ExtraPreDeployment, deploy_stdout]}

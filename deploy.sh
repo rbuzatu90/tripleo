@@ -1,6 +1,7 @@
 #!/bin/bash
 
 BASE_DIR=/root/tripleo
+IMAGES_DIR=../$BASE_DIR/images/
 RC_FILE=$BASE_DIR/overcloudrc
 TOPOLOGY_FILE=$BASE_DIR/1compute3controller.yaml
 NETWORK_ISOLATION=/usr/share/openstack-tripleo-heat-templates/environments/network-isolation.yaml
@@ -42,8 +43,8 @@ function init_openstack() {
     STACK_COMPLETE=$?
     if [[ $DEPLOYMENT_RESULT -eq 0 ]] && [[ $STACK_COMPLETE -eq 0 ]]; then
 
-        glance image-create --name "centos" --is-public true --disk-format qcow2 --container-format bare --progress --file CentOS-7-x86_64-GenericCloud.qcow2
-        glance image-create --name "cirros" --is-public true --disk-format qcow2 --container-format bare --progress --file cirros-0.3.5-x86_64-disk.img
+        glance image-create --name "centos" --is-public true --disk-format qcow2 --container-format bare --progress --file $IMAGES_DIR/CentOS-7-x86_64-GenericCloud.qcow2
+        #glance image-create --name "cirros" --is-public true --disk-format qcow2 --container-format bare --progress --file $IMAGES_DIR/cirros-0.3.5-x86_64-disk.img
       
         nova secgroup-add-rule default icmp -1 -1 0.0.0.0/0
         nova secgroup-add-rule default tcp 22 22 0.0.0.0/0
