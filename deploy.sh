@@ -9,6 +9,7 @@ NETWORK_ENVIRONMENT=$BASE_DIR/network-environment.yaml
 STORAGE_ENVIRONMENT=$BASE_DIR/storage-environment.yaml
 ENABLE_TLS=$BASE_DIR/enable-tls.yaml
 INJECT_TRUST_ANCHOR=$BASE_DIR/inject-trust-anchor.yaml
+FIXED_IPS=$BASE_DIR/fixed-ips.yaml
 
 # Log cleaning 
 rm -rf /var/log/nova/*
@@ -27,8 +28,6 @@ rm -rf /var/log/ironic-inspector/*
 time openstack overcloud deploy --templates \
     -e $TOPOLOGY_FILE \
     -e $NETWORK_ISOLATION \
-    -e $ENABLE_TLS \
-    -e $INJECT_TRUST_ANCHOR \
     -e $NETWORK_ENVIRONMENT \
     -e $STORAGE_ENVIRONMENT \
     -e timezone.yaml \
@@ -36,18 +35,22 @@ time openstack overcloud deploy --templates \
     --ntp-server pool.ntp.org
 
 
+#    -e $FIXED_IPS \
+#    -e $ENABLE_TLS \
+#    -e $INJECT_TRUST_ANCHOR \
 
 
 
 DEPLOYMENT_RESULT=$?
-sleep 15
+
 function init_openstack() {
+    sleep 10
     source $RC_FILE
     openstack stack list | grep -i complete
     STACK_COMPLETE=$?
     if [[ $DEPLOYMENT_RESULT -eq 0 ]] && [[ $STACK_COMPLETE -eq 0 ]]; then
 
-        glance image-create --name "centos" --is-public true --disk-format qcow2 --container-format bare --progress --file $IMAGES_DIR/CentOS-7-x86_64-GenericCloud.qcow2
+        glance image-create --name "centos" --visibility public --disk-format qcow2 --container-format bare --progress --file $IMAGES_DIR/CentOS-7-x86_64-GenericCloud.qcow2
         #glance image-create --name "cirros" --is-public true --disk-format qcow2 --container-format bare --progress --file $IMAGES_DIR/cirros-0.3.5-x86_64-disk.img
       
         nova secgroup-add-rule default icmp -1 -1 0.0.0.0/0
@@ -70,7 +73,7 @@ function init_openstack() {
 
         openstack flavor create m1.small --id 1 --ram 512 --disk 10 --vcpus 1
 
-        nova boot --image cirros --flavor m1.small --security-groups default --key-name mykey --nic net-id= myvm
+        nova boot --image centos --flavor m1.small --security-groups default --key-name mykey --nic net-id= myvm
 
         nova floating-ip-create
         fip=`nova floating-ip-list| grep public | awk '{print $4}' | head -1`
@@ -81,3 +84,4 @@ function init_openstack() {
         echo "Something is not right, exiting!"
     fi
 }
+init_openstack

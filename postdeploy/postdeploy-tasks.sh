@@ -31,7 +31,7 @@ if [ $? == 0 ]; then
 cat <<EOF >> /etc/glance/nfs-glance-metadata.json
 {
     "id": "NFS-glance",
-    "share_location": "nfs://$GLANCE_NFS_EXPORT",
+    "share_location": "nfs://$GLANCE_NFS_EXPORT/$glance_nfs_export",
     "mountpoint":"/var/lib/glance/images",
     "type": "nfs"
 }
