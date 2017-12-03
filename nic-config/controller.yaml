@@ -116,15 +116,20 @@ resources:
             -
               type: ovs_bridge
               name: {get_input: bridge_name}
+              dns_servers: {get_param: DnsServers}
+              use_dhcp: false
+              addresses:
+                -
+                  ip_netmask: {get_param: ExternalIpSubnet}
+              routes:
+                -
+                  default: true
+                  next_hop: {get_param: ExternalInterfaceDefaultRoute}
               members:
                 -
                   type: interface
                   name: nic2
                   use_dhcp: false
-                -
-                  type: interface
-                  name: nic3
-                  use_dhcp: true
                 -
                   type: vlan
                   vlan_id: {get_param: InternalApiNetworkVlanID}
@@ -149,18 +154,18 @@ resources:
                   addresses:
                     -
                       ip_netmask: {get_param: TenantIpSubnet}
-            -
-              type: interface
-              name: nic3
-              use_dhcp: false
-              dns_servers: {get_param: DnsServers}
-              addresses:
-                -
-                  ip_netmask: {get_param: ExternalIpSubnet}
-              routes:
-                -
-                  default: true
-                  next_hop: {get_param: ExternalInterfaceDefaultRoute}
+#            -
+#              type: interface
+#              name: nic3
+#              use_dhcp: false
+#              dns_servers: {get_param: DnsServers}
+#              addresses:
+#                -
+#                  ip_netmask: {get_param: ExternalIpSubnet}
+#              routes:
+#                -
+#                  default: true
+#                  next_hop: {get_param: ExternalInterfaceDefaultRoute}
 #              addresses:
 #                -
 #                  ip_netmask:
