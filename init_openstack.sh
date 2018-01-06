@@ -50,7 +50,7 @@ if [[ $DEPLOYMENT_RESULT -eq 0 ]] && [[ $STACK_COMPLETE -eq 0 ]]; then
     nova floating-ip-create public-net
     fip=`nova floating-ip-list| grep public | awk '{print $4}' | head -1`
     nova floating-ip-associate myvm $fip
-
+    nova list
 
 else
     echo "Something is not right, exiting!"
