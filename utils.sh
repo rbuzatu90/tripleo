@@ -1,7 +1,7 @@
 #crudini --set ~/undercloud.conf DEFAULT rpc_response_timeout 600
 source /root/stackrc
 
-
+nova list --fields name,networks | grep ctlplane | awk '{print $6, $4}' | sed  's/ctlplane=//g' >> /etc/hosts 
 function set_debug() {
     # Debug for controllers
     for i in `nova list | grep controller| awk '{print $12}'| egrep -o  "[0-9.]*"`; do
