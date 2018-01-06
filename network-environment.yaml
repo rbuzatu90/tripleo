@@ -1,37 +1,40 @@
 resource_registry:
-  OS::TripleO::BlockStorage::Net::SoftwareConfig: ./nic-config/cinder-storage.yaml
+  #OS::TripleO::BlockStorage::Net::SoftwareConfig: ./nic-config/cinder-storage.yaml
   OS::TripleO::Compute::Net::SoftwareConfig: ./nic-config/compute.yaml
   OS::TripleO::Controller::Net::SoftwareConfig: ./nic-config/controller.yaml
-  OS::TripleO::ObjectStorage::Net::SoftwareConfig: ./nic-config/swift-storage.yaml
-  OS::TripleO::CephStorage::Net::SoftwareConfig: ./nic-config/ceph-storage.yaml
-  OS::TripleO::ComputeExtraConfigPre: /root/tripleo/predeploy/compute-predeploy-tasks.yaml
-  OS::TripleO::ControllerExtraConfigPre: /root/tripleo/predeploy/controller-predeploy-tasks.yaml
-  OS::TripleO::NodeExtraConfigPost: /root/tripleo/postdeploy/postdeploy-tasks.yaml
+  #OS::TripleO::ObjectStorage::Net::SoftwareConfig: ./nic-config/swift-storage.yaml
+  #OS::TripleO::CephStorage::Net::SoftwareConfig: ./nic-config/ceph-storage.yaml
+  #OS::TripleO::ComputeExtraConfigPre: /root/tripleo/predeploy/compute-predeploy-tasks.yaml
+  #OS::TripleO::ControllerExtraConfigPre: /root/tripleo/predeploy/controller-predeploy-tasks.yaml
+  #OS::TripleO::NodeExtraConfigPost: /root/tripleo/postdeploy/simple.yaml
+  #OS::TripleO::NodeExtraConfigPost: /root/tripleo/postdeploy/postdeploy-tasks.yaml
 
   OS::TripleO::Network::Ports::NetVipMap: /usr/share/openstack-tripleo-heat-templates/network/ports/net_vip_map_external.yaml
   OS::TripleO::Network::Ports::ExternalVipPort: /usr/share/openstack-tripleo-heat-templates/network/ports/noop.yaml
   OS::TripleO::Network::Ports::InternalApiVipPort: /usr/share/openstack-tripleo-heat-templates/network/ports/noop.yaml
   OS::TripleO::Network::Ports::StorageVipPort: /usr/share/openstack-tripleo-heat-templates/network/ports/noop.yaml
   OS::TripleO::Network::Ports::StorageMgmtVipPort: /usr/share/openstack-tripleo-heat-templates/network/ports/noop.yaml
-  OS::TripleO::Network::Ports::RedisVipPort: /usr/share/openstack-tripleo-heat-templates/network/ports/from_service.yaml
+  #OS::TripleO::Network::Ports::RedisVipPort: /usr/share/openstack-tripleo-heat-templates/network/ports/from_service.yaml
 
 parameter_defaults:
-  ControllerHostnameFormat: 'ctrl-%index%-orangeinfra'
-  ComputeHostnameFormat: 'cmpt-%index%-orangeinfra'
-
+  GlanceBackend: file
   ExternalNetworkVip: 192.168.122.101
   InternalApiNetworkVip: 172.16.0.9
   ControlPlaneIP: 192.168.2.25
   StorageNetworkVip: 172.18.0.9
   StorageMgmtNetworkVip: 172.19.0.10
   PublicVirtualFixedIPs: [{'ip_address':'192.168.122.101'}]
-  ServiceVips:
-    redis: 172.16.0.8
+
   controllerExtraConfig:
     neutron::agents::metadata::auth_url: http://192.168.2.25:35357/v2.0
-    glance::api::show_multiple_locations: True
-    glance::api::show_image_direct_url: True
-    NeutronEnableIsolatedMetadata: true
+
+  ExtraConfig:
+    nova::debug: true
+    glance::registry::debug: true
+    glance::api::debug: true
+    neutron::debug: true
+    keystone::debug: true
+    cinder::debug: true
 
   InternalApiNetCidr: 172.16.0.0/24
   TenantNetCidr: 172.17.0.0/24

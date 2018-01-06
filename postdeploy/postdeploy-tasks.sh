@@ -43,54 +43,54 @@ echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC93x9G9fECs5LcvS6d2GaWqhw4x0/wJuLeRy
 echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC93x9G9fECs5LcvS6d2GaWqhw4x0/wJuLeRy2wh5zHwu6fJQQ7Xg1gTqzq4Eb/ddM8qCtxu9wU2rz5VsaZlH4QH6ns5nsexMCXX5HE556uOXGgpuVJGqv2WW3zOmyfFBy1FDxDWOT6UVZfy6G+at3ZxTbXYIuARvs5ije3mWUxfyiPZMdcb8JQvvMuaCD0is6t+47pXOZjJsfMy9B9V92MwqraB8e7LmLTyzfxxSPyB7xYZb4yYcFRiuzr/Pgik8UFNHMIy0nqGPQRs2w5Z5jbl0GfCB0aSLuBp668yDmd37sLfmIJ2MKbeZ8BtHsgP+bAoLH0h08/EBszBgnJ2FWH root@zion" > /home/heat-admin/.ssh/authorized_keys
 
 /bin/hostnamectl | grep 'hostname' | grep ctrl- -q ;
-if [ $? == 0 ]; then
-
-    #Export OS values
-    #export OS_TOKEN=$(hiera "keystone::admin_token")
-    #export OS_URL=$(hiera "nova::api::identity_uri")/v2.0/
-
-    #cinder_user_id=$(openstack user show cinder -c id -f value)
-    #service_id=$(openstack project show service -c id -f value)
-
-    #openstack-config --set /etc/cinder/cinder.conf DEFAULT cinder_internal_tenant_project_id $service_id
-    #openstack-config --set /etc/cinder/cinder.conf DEFAULT cinder_internal_tenant_user_id $cinder_user_id
-
-    #cinder --os-username admin --os-tenant-name admin type-create iSCSI_NetApp
-    #cinder --os-username admin --os-tenant-name admin type-key iSCSI_NetApp set volume_backend_name=tripleo_iscsi
-
-    #cinder --os-username admin --os-tenant-name admin type-create NFS_NetApp
-    #cinder --os-username admin --os-tenant-name admin type-key NFS_NetApp set volume_backend_name=tripleo_netapp
-
-# Create metadata file for Glance backend
-cat <<EOF >> /etc/glance/nfs-glance-metadata.json
-{
-    "id": "NFS-glance",
-    "share_location": "nfs://$GLANCE_NFS_EXPORT/$glance_nfs_export",
-    "mountpoint":"/var/lib/glance/images",
-    "type": "nfs"
-}
-EOF
-
-    # Set up path of the file in glance-api.conf file
-    openstack-config --set /etc/glance/glance-api.conf glance_store filesystem_store_metadata_file "/etc/glance/nfs-glance-metadata.json"
-
-    #cd /usr/bin/ && sudo curl -O http://$UNDERCLOUD_IP/$OFFLOAD_BIN
-
-    #if [ $? -eq 0 ]; then
-    #    chown cinder:cinder /usr/bin/$OFFLOAD_BIN
-    #    chmod +x /usr/bin/$OFFLOAD_BIN
-    #else
-    #    exit 1
-    #fi
-
-    # Restart Cinder & Glance services
-    if [[ $(hostname) =~ "$(hiera keystone::roles::first_controller_host)" ]]; then
-        pcs resource restart openstack-cinder-volume-clone $(hostname | sed 's/.localdomain//')
-        pcs resource restart openstack-cinder-api-clone $(hostname | sed 's/.localdomain//')
-        pcs resource restart openstack-glance-registry-clone $(hostname | sed 's/.localdomain//')
-        pcs resource restart openstack-glance-api-clone $(hostname | sed 's/.localdomain//')
-    fi
-
-   echo "`date` - NetApp post-deploy setup succeed"
-
-fi
+#if [ $? == 0 ]; then
+#
+#    #Export OS values
+#    #export OS_TOKEN=$(hiera "keystone::admin_token")
+#    #export OS_URL=$(hiera "nova::api::identity_uri")/v2.0/
+#
+#    #cinder_user_id=$(openstack user show cinder -c id -f value)
+#    #service_id=$(openstack project show service -c id -f value)
+#
+#    #openstack-config --set /etc/cinder/cinder.conf DEFAULT cinder_internal_tenant_project_id $service_id
+#    #openstack-config --set /etc/cinder/cinder.conf DEFAULT cinder_internal_tenant_user_id $cinder_user_id
+#
+#    #cinder --os-username admin --os-tenant-name admin type-create iSCSI_NetApp
+#    #cinder --os-username admin --os-tenant-name admin type-key iSCSI_NetApp set volume_backend_name=tripleo_iscsi
+#
+#    #cinder --os-username admin --os-tenant-name admin type-create NFS_NetApp
+#    #cinder --os-username admin --os-tenant-name admin type-key NFS_NetApp set volume_backend_name=tripleo_netapp
+#
+## Create metadata file for Glance backend
+#cat <<EOF >> /etc/glance/nfs-glance-metadata.json
+#{
+#    "id": "NFS-glance",
+#    "share_location": "nfs://$GLANCE_NFS_EXPORT/$glance_nfs_export",
+#    "mountpoint":"/var/lib/glance/images",
+#    "type": "nfs"
+#}
+#EOF
+#
+#    # Set up path of the file in glance-api.conf file
+#    openstack-config --set /etc/glance/glance-api.conf glance_store filesystem_store_metadata_file "/etc/glance/nfs-glance-metadata.json"
+#
+#    #cd /usr/bin/ && sudo curl -O http://$UNDERCLOUD_IP/$OFFLOAD_BIN
+#
+#    #if [ $? -eq 0 ]; then
+#    #    chown cinder:cinder /usr/bin/$OFFLOAD_BIN
+#    #    chmod +x /usr/bin/$OFFLOAD_BIN
+#    #else
+#    #    exit 1
+#    #fi
+#
+#    # Restart Cinder & Glance services
+#    if [[ $(hostname) =~ "$(hiera keystone::roles::first_controller_host)" ]]; then
+#        pcs resource restart openstack-cinder-volume-clone $(hostname | sed 's/.localdomain//')
+#        pcs resource restart openstack-cinder-api-clone $(hostname | sed 's/.localdomain//')
+#        pcs resource restart openstack-glance-registry-clone $(hostname | sed 's/.localdomain//')
+#        pcs resource restart openstack-glance-api-clone $(hostname | sed 's/.localdomain//')
+#    fi
+#
+#   echo "`date` - NetApp post-deploy setup succeed"
+#
+#fi

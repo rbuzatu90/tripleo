@@ -4,7 +4,7 @@ BASE_DIR=/root/tripleo
 IMAGES_DIR=$BASE_DIR/../images/
 UNDERCLOUD_RC_FILE=$BASE_DIR/stackrc
 OVERCLOUD_RC_FILE=$BASE_DIR/overcloudrc.v3
-TOPOLOGY_FILE=$BASE_DIR/1compute3controller.yaml
+TOPOLOGY_FILE=$BASE_DIR/topology.yaml
 NETWORK_ISOLATION=/usr/share/openstack-tripleo-heat-templates/environments/network-isolation.yaml
 NETWORK_ENVIRONMENT=$BASE_DIR/network-environment.yaml
 STORAGE_ENVIRONMENT=$BASE_DIR/storage-environment.yaml
@@ -28,16 +28,17 @@ rm -rf /var/log/ironic-inspector/*
 source $UNDERCLOUD_RC_FILE
 # Deploy
 time openstack overcloud deploy --templates \
+    -r roles_data.yaml \
     -e $TOPOLOGY_FILE \
     -e $NETWORK_ISOLATION \
     -e $NETWORK_ENVIRONMENT \
-    -e $STORAGE_ENVIRONMENT \
     -e timezone.yaml \
     --verbose \
     --ntp-server pool.ntp.org
 
 
 #    -e $FIXED_IPS \
+#    -e $STORAGE_ENVIRONMENT \
 #    -e $ENABLE_TLS \
 #    -e $INJECT_TRUST_ANCHOR \
 
@@ -86,7 +87,7 @@ function init_openstack() {
         nova floating-ip-create public-net
         fip=`nova floating-ip-list| grep public | awk '{print $4}' | head -1`
         nova floating-ip-associate myvm $fip
-
+        nova list
 
     else
         echo "Something is not right, exiting!"
