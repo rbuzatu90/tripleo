@@ -1,4 +1,7 @@
 #crudini --set ~/undercloud.conf DEFAULT rpc_response_timeout 600
+
+upload-swift-artifacts -f my_scripts.tgz --environment deploy_artifacts.yaml
+
 source /root/stackrc
 
 nova list --fields name,networks | grep ctlplane | awk '{print $6, $4}' | sed  's/ctlplane=//g' >> /etc/hosts 

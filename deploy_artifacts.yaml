@@ -1,0 +1,5 @@
+# Heat environment to deploy artifacts via Swift Temp URL(s)
+parameter_defaults:
+  DeployArtifactURLs:
+    - 'http://192.168.2.1:8080/v1/AUTH_6a296b39144145aeb4bbdea9f05ce0d7/overcloud-artifacts/my_scripts.tgz?temp_url_sig=a70303728ccf3a391b2bafd589e25fbd7222b91a&temp_url_expires=1547306810'
+    - 'http://192.168.2.1:8080/v1/AUTH_6a296b39144145aeb4bbdea9f05ce0d7/overcloud-artifacts/tempest.tgz?temp_url_sig=2b8bac37fcfbfa256091cffe11fc34f140125e0e&temp_url_expires=1547306656'

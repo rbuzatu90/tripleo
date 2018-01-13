@@ -22,6 +22,9 @@
   HostnameFormatDefault: 'ctrl%index%'
   ServicesDefault:
     - OS::TripleO::Services::CACerts
+#    - OS::TripleO::Services::CephMon
+#    - OS::TripleO::Services::CephExternal
+#    - OS::TripleO::Services::CephRgw
     - OS::TripleO::Services::CinderApi
     - OS::TripleO::Services::CinderBackup
     - OS::TripleO::Services::CinderScheduler
@@ -67,6 +70,8 @@
   ServicesDefault:
     - OS::TripleO::Services::CACerts
     - OS::TripleO::Services::Timezone
+#    - OS::TripleO::Services::CephClient
+#    - OS::TripleO::Services::CephExternal
     - OS::TripleO::Services::Ntp
     - OS::TripleO::Services::Snmp
     - OS::TripleO::Services::Sshd

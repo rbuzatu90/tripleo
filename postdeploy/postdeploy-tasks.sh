@@ -42,7 +42,7 @@ sudo chmod 400 /root/.ssh/id_rsa
 echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC93x9G9fECs5LcvS6d2GaWqhw4x0/wJuLeRy2wh5zHwu6fJQQ7Xg1gTqzq4Eb/ddM8qCtxu9wU2rz5VsaZlH4QH6ns5nsexMCXX5HE556uOXGgpuVJGqv2WW3zOmyfFBy1FDxDWOT6UVZfy6G+at3ZxTbXYIuARvs5ije3mWUxfyiPZMdcb8JQvvMuaCD0is6t+47pXOZjJsfMy9B9V92MwqraB8e7LmLTyzfxxSPyB7xYZb4yYcFRiuzr/Pgik8UFNHMIy0nqGPQRs2w5Z5jbl0GfCB0aSLuBp668yDmd37sLfmIJ2MKbeZ8BtHsgP+bAoLH0h08/EBszBgnJ2FWH root@zion" > /root/.ssh/authorized_keys
 echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC93x9G9fECs5LcvS6d2GaWqhw4x0/wJuLeRy2wh5zHwu6fJQQ7Xg1gTqzq4Eb/ddM8qCtxu9wU2rz5VsaZlH4QH6ns5nsexMCXX5HE556uOXGgpuVJGqv2WW3zOmyfFBy1FDxDWOT6UVZfy6G+at3ZxTbXYIuARvs5ije3mWUxfyiPZMdcb8JQvvMuaCD0is6t+47pXOZjJsfMy9B9V92MwqraB8e7LmLTyzfxxSPyB7xYZb4yYcFRiuzr/Pgik8UFNHMIy0nqGPQRs2w5Z5jbl0GfCB0aSLuBp668yDmd37sLfmIJ2MKbeZ8BtHsgP+bAoLH0h08/EBszBgnJ2FWH root@zion" > /home/heat-admin/.ssh/authorized_keys
 
-/bin/hostnamectl | grep 'hostname' | grep ctrl- -q ;
+#/bin/hostnamectl | grep 'hostname' | grep ctrl- -q ;
 #if [ $? == 0 ]; then
 #
 #    #Export OS values

@@ -12,6 +12,7 @@ ENABLE_TLS=$BASE_DIR/enable-tls.yaml
 INJECT_TRUST_ANCHOR=$BASE_DIR/inject-trust-anchor.yaml
 TLS_ENDPOINTS=/usr/share/openstack-tripleo-heat-templates/environments/tls-endpoints-public-ip.yaml
 FIXED_IPS=$BASE_DIR/fixed-ips.yaml
+ARTIFACTS=$BASE_DIR/deploy_artifacts.yaml
 
 # Log cleaning 
 rm -rf /var/log/nova/*
@@ -36,15 +37,17 @@ time openstack overcloud deploy --templates \
     -e $TLS_ENDPOINTS \
     -e $NETWORK_ISOLATION \
     -e $NETWORK_ENVIRONMENT \
+    -e $ARTIFACTS \
     -e timezone.yaml \
     --verbose \
     --ntp-server pool.ntp.org
 
 
-#    -e $FIXED_IPS \
 #    -e $STORAGE_ENVIRONMENT \
+#    -e $FIXED_IPS \
 
 export DEPLOYMENT_RESULT=$?
+yes | cp /etc/hosts.base /etc/hosts; source $UNDERCLOUD_RC_FILE; nova list --fields name,networks | grep ctlplane | awk '{print $6, $4}' | sed  's/ctlplane=//g' >> /etc/hosts
 echo 'export PYTHONWARNINGS="ignore:Certificate has no, ignore:A true SSLContext object is not available, ignore:Certificate for"' >> overcloudrc.v3
 echo "Deployment exited with $DEPLOYMENT_RESULT"
 if [[ $DEPLOYMENT_RESULT -ne 0 ]]; then

@@ -4,17 +4,17 @@ resource_registry:
   OS::TripleO::Controller::Net::SoftwareConfig: ./nic-config/controller.yaml
   #OS::TripleO::ObjectStorage::Net::SoftwareConfig: ./nic-config/swift-storage.yaml
   #OS::TripleO::CephStorage::Net::SoftwareConfig: ./nic-config/ceph-storage.yaml
-  OS::TripleO::ComputeExtraConfigPre: /root/tripleo/predeploy/compute-predeploy-tasks.yaml
-  OS::TripleO::ControllerExtraConfigPre: /root/tripleo/predeploy/controller-predeploy-tasks.yaml
-  #OS::TripleO::NodeExtraConfigPost: /root/tripleo/postdeploy/simple.yaml
-  #OS::TripleO::NodeExtraConfigPost: /root/tripleo/postdeploy/postdeploy-tasks.yaml
 
   OS::TripleO::Network::Ports::NetVipMap: /usr/share/openstack-tripleo-heat-templates/network/ports/net_vip_map_external.yaml
   OS::TripleO::Network::Ports::ExternalVipPort: /usr/share/openstack-tripleo-heat-templates/network/ports/noop.yaml
   OS::TripleO::Network::Ports::InternalApiVipPort: /usr/share/openstack-tripleo-heat-templates/network/ports/noop.yaml
   OS::TripleO::Network::Ports::StorageVipPort: /usr/share/openstack-tripleo-heat-templates/network/ports/noop.yaml
   OS::TripleO::Network::Ports::StorageMgmtVipPort: /usr/share/openstack-tripleo-heat-templates/network/ports/noop.yaml
-  #OS::TripleO::Network::Ports::RedisVipPort: /usr/share/openstack-tripleo-heat-templates/network/ports/from_service.yaml
+
+  #OS::TripleO::ComputeExtraConfigPre: /root/tripleo/predeploy/compute-predeploy-tasks.yaml
+  #OS::TripleO::ControllerExtraConfigPre: /root/tripleo/predeploy/controller-predeploy-tasks.yaml
+  #OS::TripleO::NodeExtraConfigPost: /root/tripleo/postdeploy/simple.yaml
+  OS::TripleO::NodeExtraConfigPost: /root/tripleo/postdeploy/postdeploy-tasks.yaml
 
 parameter_defaults:
   GlanceBackend: file
