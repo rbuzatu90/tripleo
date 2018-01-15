@@ -32,18 +32,18 @@ source $UNDERCLOUD_RC_FILE
 time openstack overcloud deploy --templates \
     -r roles_data.yaml \
     -e $TOPOLOGY_FILE \
+    -e $STORAGE_ENVIRONMENT \
     -e $NETWORK_ISOLATION \
     -e $NETWORK_ENVIRONMENT \
-    -e $ARTIFACTS \
     -e timezone.yaml \
     --verbose \
     --ntp-server pool.ntp.org
 
 
+#    -e $ARTIFACTS \
 #    -e $INJECT_TRUST_ANCHOR \
 #    -e $ENABLE_TLS \
 #    -e $TLS_ENDPOINTS \
-#    -e $STORAGE_ENVIRONMENT \
 #    -e $FIXED_IPS \
 
 export DEPLOYMENT_RESULT=$?
