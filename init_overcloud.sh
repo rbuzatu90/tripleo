@@ -30,7 +30,7 @@ if [[ $DEPLOYMENT_RESULT -eq 0 ]] && [[ $STACK_COMPLETE -eq 0 ]]; then
     nova secgroup-add-rule default tcp 443 443 0.0.0.0/0
     nova keypair-add --pub-key /root/.ssh/id_rsa.pub mykey
 
-    openstack flavor create m1.small --id 1 --ram 512 --disk 10 --vcpus 1
+    openstack flavor create m1.small --id 1 --ram 512 --disk 9 --vcpus 1
 
     neutron net-create private-net --provider:network_type vxlan
     subnet="10.0.0"
@@ -49,9 +49,10 @@ if [[ $DEPLOYMENT_RESULT -eq 0 ]] && [[ $STACK_COMPLETE -eq 0 ]]; then
 
     nova floating-ip-create public-net
     fip=`nova floating-ip-list| grep public | awk '{print $4}' | head -1`
+    sleep 5
     nova floating-ip-associate myvm $fip
     nova list
-
+    echo "Init overcloud done"
 else
     echo "Something is not right, exiting!"
 fi

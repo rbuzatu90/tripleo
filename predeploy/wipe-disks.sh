@@ -1,5 +1,6 @@
 #!/bin/bash
 set +x
+echo "" > /root/wipe_disks
 if [[ `hostname` = *"cmpt"* ]]
 then
   echo "Number of disks detected: $(lsblk -no NAME,TYPE,MOUNTPOINT | grep "disk" | awk '{print $1}' | wc -l)"

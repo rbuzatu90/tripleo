@@ -3,9 +3,6 @@
     {
       "name": "controller01",
       "capabilities": "profile:control,boot_option:local",
-      "cpu":"2",
-      "memory":"9950",
-      "disk":"79",
       "arch":"x86_64",
       "pm_type": "pxe_ssh",
       "pm_user": "root",
@@ -18,9 +15,6 @@
     {
       "name": "controller02",
       "capabilities": "profile:control,boot_option:local",
-      "cpu":"2",
-      "memory":"9950",
-      "disk":"79",
       "arch":"x86_64",
       "pm_type": "pxe_ssh",
       "pm_user": "root",
@@ -33,9 +27,6 @@
     {
       "name": "controller03",
       "capabilities": "profile:control,boot_option:local",
-      "cpu":"2",
-      "memory":"9950",
-      "disk":"79",
       "arch":"x86_64",
       "pm_type": "pxe_ssh",
       "pm_user": "root",
@@ -48,9 +39,6 @@
     {
       "name": "compute01",
       "capabilities": "profile:compute,boot_option:local",
-      "cpu":"2",
-      "memory":"6216",
-      "disk":"79",
       "arch":"x86_64",
       "pm_type": "pxe_ssh",
       "pm_user": "root",
@@ -63,9 +51,6 @@
     {
       "name": "compute02",
       "capabilities": "profile:compute,boot_option:local",
-      "cpu":"2",
-      "memory":"6216",
-      "disk":"79",
       "arch":"x86_64",
       "pm_type": "pxe_ssh",
       "pm_user": "root",
@@ -78,9 +63,6 @@
     {
       "name": "compute03",
       "capabilities": "profile:compute,boot_option:local",
-      "cpu":"2",
-      "memory":"6216",
-      "disk":"79",
       "arch":"x86_64",
       "pm_type": "pxe_ssh",
       "pm_user": "root",

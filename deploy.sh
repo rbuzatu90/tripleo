@@ -10,7 +10,7 @@ NETWORK_ENVIRONMENT=$BASE_DIR/network-environment.yaml
 STORAGE_ENVIRONMENT=$BASE_DIR/storage-environment.yaml
 ENABLE_TLS=$BASE_DIR/enable-tls.yaml
 INJECT_TRUST_ANCHOR=$BASE_DIR/inject-trust-anchor.yaml
-TLS_ENDPOINTS=/usr/share/openstack-tripleo-heat-templates/environments/tls-endpoints-public-ip.yaml
+TLS_ENDPOINTS=/usr/share/openstack-tripleo-heat-templates/environments/tls-endpoints-public-dns.yaml
 FIXED_IPS=$BASE_DIR/fixed-ips.yaml
 ARTIFACTS=$BASE_DIR/deploy_artifacts.yaml
 
@@ -30,10 +30,14 @@ rm -rf /var/log/ironic-inspector/*
 source $UNDERCLOUD_RC_FILE
 # Deploy
 time openstack overcloud deploy --templates \
-    -r roles_data.yaml \
+    -r roles_data_simple.yaml \
     -e $TOPOLOGY_FILE \
-    -e $STORAGE_ENVIRONMENT \
     -e $NETWORK_ISOLATION \
+    -e $STORAGE_ENVIRONMENT \
+    -e $INJECT_TRUST_ANCHOR \
+    -e $ENABLE_TLS \
+    -e $TLS_ENDPOINTS \
+    -e cloudname.yaml \
     -e $NETWORK_ENVIRONMENT \
     -e timezone.yaml \
     --verbose \

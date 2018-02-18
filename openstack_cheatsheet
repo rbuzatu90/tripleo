@@ -5,6 +5,8 @@ nova list --all >> state ; neutron net-list >> state ; neutron subnet-list >> st
 curl -s -d "{\"auth\":{\"passwordCredentials\": {\"username\": \"admin\", \"password\": \"$OS_PASSWORD\"}, \"tenantName\": \"admin\"}}" -H "Content-type: application/json" $OS_AUTH_URL/tokens | jq -r '.access.token.id' # | python -mjson.tool  # curl log openstack keystone
 curl -s -H "X-Auth-Token: $token"  https://$ip | python -m json.tool # curl log openstack keystone
 
+openstack baremetal introspection data save 1a4e30da-b6dc-499d-ba87-0bd8a3819bc0 | jq ".inventory.disks"
+ironic node-update 2d50e952-21b7-4484-b218-9db2d7107061 remove cf29fed0-10b8-4fa6-8b24-1f464a67a559
 neutron port-create private-net --allowed-address-pairs type=dict list=true ip_address=10.0.0.104
 neutron port-create remus-private-net --allowed-address-pairs type=dict list=true ip_address=10.1.1.104,mac_address=fa:16:3e:67:9b:d7 ip_address=10.1.1.105,mac_address=fa:16:3e:67:9b:d8
 neutron port-create Internet_Production --fixed-ip ip_address=10.171.53.173 --allowed-address-pairs type=dict list=true ip_address=10.171.53.171
@@ -109,3 +111,5 @@ virt-customize -a overcloud-full.qcow2 --upload local_file:remote_file
 virt-customize -a overcloud-full.qcow2 --run-command 'echo lol > /root/hello'
 
  /usr/libexec/qemu-kvm  -m 1024  --enable-kvm --drive file=G3R1-disk1.qcow2 --drive file=G3R1-disk2.qcow2 -vnc :4
+
+/tmp/guestfish
