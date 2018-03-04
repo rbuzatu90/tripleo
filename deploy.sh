@@ -30,18 +30,14 @@ rm -rf /var/log/ironic-inspector/*
 source $UNDERCLOUD_RC_FILE
 # Deploy
 time openstack overcloud deploy --templates \
-    -r roles_data_simple.yaml \
     -e $TOPOLOGY_FILE \
     -e $NETWORK_ISOLATION \
     -e $STORAGE_ENVIRONMENT \
     -e $INJECT_TRUST_ANCHOR \
     -e $ENABLE_TLS \
     -e $TLS_ENDPOINTS \
-    -e cloudname.yaml \
     -e $NETWORK_ENVIRONMENT \
-    -e timezone.yaml \
-    --verbose \
-    --ntp-server pool.ntp.org
+    --verbose
 
 
 #    -e $ARTIFACTS \

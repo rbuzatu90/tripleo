@@ -17,7 +17,6 @@ resource_registry:
   OS::TripleO::NodeExtraConfigPost: /root/tripleo/postdeploy/postdeploy-tasks.yaml
 
 parameter_defaults:
-  GlanceBackend: file
   ExternalNetworkVip: 192.168.122.101
   InternalApiNetworkVip: 172.16.0.9
   ControlPlaneIP: 192.168.2.25
@@ -42,6 +41,7 @@ parameter_defaults:
   StorageMgmtNetCidr: 172.19.0.0/24
   ManagementNetCidr: 172.20.0.0/24
   ExternalNetCidr: 192.168.122.0/24
+
   InternalApiAllocationPools: [{'start': '172.16.0.10', 'end': '172.16.0.200'}]
   TenantAllocationPools: [{'start': '172.17.0.10', 'end': '172.17.0.200'}]
   StorageAllocationPools: [{'start': '172.18.0.10', 'end': '172.18.0.200'}]
@@ -56,7 +56,12 @@ parameter_defaults:
   # The IP address of the EC2 metadata server. Generally the IP of the Undercloud
   EC2MetadataIp: 192.168.2.1
   # Define the DNS servers (maximum 2) for the overcloud nodes
-  DnsServers: ["8.8.8.8","8.8.4.4"]
+  #
+  DnsServers: ["192.168.122.10"]
+  NtpServer: pool.ntp.org
+  TimeZone: 'Europe/Bucharest'
+  CloudName: mylab.test
+
   InternalApiNetworkVlanID: 201
   StorageNetworkVlanID: 202
   StorageMgmtNetworkVlanID: 203

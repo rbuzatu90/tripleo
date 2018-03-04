@@ -1,3 +1,0 @@
-parameter_defaults:
-  CloudName: mylab.test
-  DnsServers: ["192.168.122.4"]
