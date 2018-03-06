@@ -14,9 +14,10 @@ resource_registry:
   #OS::TripleO::ComputeExtraConfigPre: /root/tripleo/predeploy/compute-predeploy-tasks.yaml
   #OS::TripleO::ControllerExtraConfigPre: /root/tripleo/predeploy/controller-predeploy-tasks.yaml
   #OS::TripleO::NodeExtraConfigPost: /root/tripleo/postdeploy/simple.yaml
-  OS::TripleO::NodeExtraConfigPost: /root/tripleo/postdeploy/postdeploy-tasks.yaml
+  #OS::TripleO::NodeExtraConfigPost: /root/tripleo/postdeploy/postdeploy-tasks.yaml
 
 parameter_defaults:
+  GlanceBackend: file
   ExternalNetworkVip: 192.168.122.101
   InternalApiNetworkVip: 172.16.0.9
   ControlPlaneIP: 192.168.2.25
@@ -28,6 +29,24 @@ parameter_defaults:
     neutron::agents::metadata::auth_url: http://192.168.2.25:35357/v2.0
 
   ExtraConfig:
+    tripleo::profile::base::sshd::options:
+      PasswordAuthentication: 'yes'
+      AuthorizedKeysFile: '/home/heat-admin/.ssh/authorized_keys'
+#    tripleo::firewall::manage_firewall: true
+#    tripleo::firewall::rules:
+#      '300 allow nagios 1':
+#      port: 5666
+#      proto: tcp
+#      action: accept
+#      '301 allow nagios 1':
+#      port: 161
+#      proto: udp
+#      action: accept
+#      '302 allow nagios 2':
+#      port: 162
+#      proto: udp
+#      action: accept
+
     nova::debug: true
     glance::registry::debug: true
     glance::api::debug: true
@@ -59,7 +78,7 @@ parameter_defaults:
   #
   DnsServers: ["192.168.122.10"]
   NtpServer: pool.ntp.org
-  TimeZone: 'Europe/Bucharest'
+  TimeZone: 'Asia/Dubai'
   CloudName: mylab.test
 
   InternalApiNetworkVlanID: 201
@@ -71,9 +90,9 @@ parameter_defaults:
   # Set to "br-ex" if using floating IPs on native VLAN on bridge br-ex
   NeutronExternalNetworkBridge: "br-ex"
   # Customize bonding options if require
-  nova_nfs_export: "192.168.122.1:/data/exports/nova"
+#  nova_nfs_export: "192.168.122.1:/data/exports/nova"
 
-  glance_nfs_export: '192.168.122.1:/data/exports/glance'
+#  glance_nfs_export: '192.168.122.1:/data/exports/glance'
 
 #  BondInterfaceOvsOptions:
 #    "bond_mode=balance-tcp"
