@@ -54,4 +54,4 @@ if [[ $DEPLOYMENT_RESULT -ne 0 ]]; then
     echo "Deployment failed, exiting"
     exit 1
 fi
-./init_openstack.sh
+./init_overcloud.sh
