@@ -8,8 +8,8 @@ TOPOLOGY_FILE=$BASE_DIR/topology.yaml
 NETWORK_ISOLATION=/usr/share/openstack-tripleo-heat-templates/environments/network-isolation.yaml
 NETWORK_ENVIRONMENT=$BASE_DIR/network-environment.yaml
 STORAGE_ENVIRONMENT=$BASE_DIR/storage-environment.yaml
-ENABLE_TLS=$BASE_DIR/enable-tls.yaml
-INJECT_TRUST_ANCHOR=$BASE_DIR/inject-trust-anchor.yaml
+ENABLE_TLS=$BASE_DIR/tls/enable-tls.yaml
+INJECT_TRUST_ANCHOR=$BASE_DIR/tls/inject-trust-anchor.yaml
 TLS_ENDPOINTS=/usr/share/openstack-tripleo-heat-templates/environments/tls-endpoints-public-dns.yaml
 FIXED_IPS=$BASE_DIR/fixed-ips.yaml
 ARTIFACTS=$BASE_DIR/deploy_artifacts.yaml
@@ -32,7 +32,6 @@ source $UNDERCLOUD_RC_FILE
 time openstack overcloud deploy --templates \
     -e $TOPOLOGY_FILE \
     -e $NETWORK_ISOLATION \
-    -e $STORAGE_ENVIRONMENT \
     -e $INJECT_TRUST_ANCHOR \
     -e $ENABLE_TLS \
     -e $TLS_ENDPOINTS \
@@ -40,6 +39,7 @@ time openstack overcloud deploy --templates \
     --verbose
 
 
+#    -e $STORAGE_ENVIRONMENT \
 #    -e $ARTIFACTS \
 #    -e $INJECT_TRUST_ANCHOR \
 #    -e $ENABLE_TLS \
@@ -54,4 +54,4 @@ if [[ $DEPLOYMENT_RESULT -ne 0 ]]; then
     echo "Deployment failed, exiting"
     exit 1
 fi
-#./init_openstack.sh
+./init_openstack.sh
