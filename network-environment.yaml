@@ -79,7 +79,7 @@ parameter_defaults:
   DnsServers: ["192.168.122.10"]
   NtpServer: pool.ntp.org
   TimeZone: 'Asia/Dubai'
-  CloudName: mylab.test
+  CloudName: overcloud.mylab.test
 
   InternalApiNetworkVlanID: 201
   StorageNetworkVlanID: 202
