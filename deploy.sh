@@ -32,6 +32,7 @@ source $UNDERCLOUD_RC_FILE
 time openstack overcloud deploy --templates \
     -e $TOPOLOGY_FILE \
     -e $NETWORK_ISOLATION \
+    -e $FIXED_IPS \
     -e $INJECT_TRUST_ANCHOR \
     -e $ENABLE_TLS \
     -e $TLS_ENDPOINTS \
@@ -44,7 +45,6 @@ time openstack overcloud deploy --templates \
 #    -e $INJECT_TRUST_ANCHOR \
 #    -e $ENABLE_TLS \
 #    -e $TLS_ENDPOINTS \
-#    -e $FIXED_IPS \
 
 export DEPLOYMENT_RESULT=$?
 yes | cp /etc/hosts.base /etc/hosts; source $UNDERCLOUD_RC_FILE; nova list --fields name,networks | grep ctlplane | awk '{print $6, $4}' | sed  's/ctlplane=//g' >> /etc/hosts
