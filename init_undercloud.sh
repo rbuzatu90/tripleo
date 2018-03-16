@@ -20,6 +20,7 @@ cd $IMAGES_DIR
 for i in /usr/share/rhosp-director-images/overcloud-full-latest-10.0.tar /usr/share/rhosp-director-images/ironic-python-agent-latest-10.0.tar; do tar -xvf $i; done
 # Customize overcloud img
 # Set UseDNS no in /usr/share/openstack-puppet/modules/ssh/templates/sshd_config.erb:36:UseDNS
+# Also set UseDNS no in /etc/ssh/sshd_config
 # Set root password
 # Set alias for vim
 openstack overcloud image upload --image-path $IMAGES_DIR
