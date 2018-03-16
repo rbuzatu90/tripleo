@@ -23,6 +23,7 @@ for i in /usr/share/rhosp-director-images/overcloud-full-latest-10.0.tar /usr/sh
 # Also set UseDNS no in /etc/ssh/sshd_config
 # Set root password
 # Set alias for vim
+# Set undercloud hostname
 openstack overcloud image upload --image-path $IMAGES_DIR
 openstack subnet set --dns-nameserver 8.8.8.8 <SUBNET_ID>
 
