@@ -45,12 +45,17 @@ if [[ $DEPLOYMENT_RESULT -eq 0 ]] && [[ $STACK_COMPLETE -eq 0 ]]; then
     neutron router-gateway-set external-router public-net
 
     net_id=`neutron net-list  | grep private |awk '{print $2}'`
-    nova boot --image centos --flavor m1.small --security-groups default --key-name mykey --nic net-id=$net_id myvm
+    nova boot --image centos --flavor m1.small --security-groups default --key-name mykey --nic net-id=$net_id myvm1
+    nova boot --image centos --flavor m1.small --security-groups default --key-name mykey --nic net-id=$net_id myvm2
 
-    nova floating-ip-create public-net
-    fip=`nova floating-ip-list| grep public | awk '{print $4}' | head -1`
-    sleep 5
-    nova floating-ip-associate myvm $fip
+    fip1=`nova floating-ip-create public-net | grep public |awk '{print $4}'`
+    fip2=`nova floating-ip-create public-net | grep public |awk '{print $4}'`
+    sleep 20
+    nova floating-ip-associate myvm1 $fip1
+    nova floating-ip-associate myvm2 $fip2
+    sleep 10
+    ping -c2 $fip1
+    ping -c2 $fip2
     nova list
     echo "Init overcloud done"
 else
