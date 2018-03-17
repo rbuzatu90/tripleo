@@ -1,0 +1,33 @@
+heat_template_version: 2015-04-30
+
+parameters:
+
+resources:
+  smallish_flavor:
+    type: OS::Nova::Flavor
+    properties:
+      disk: 150
+      name: 'smallish_flavor'
+      ram: 4096
+      vcpus: 4
+
+  datacentre_provider_network:
+    type: OS::Neutron::ProviderNet
+    properties:
+      name: 'datacentre-provider-network'
+      network_type: 'vlan'
+      physical_network: 'datacentre'
+      segmentation_id: 3604
+
+  dc_prov_port:
+    type: OS::Neutron::Port
+    properties:
+      name: spgw-2_port
+      network: { get_resource: datacentre_provider_network }
+
+  my_vm1:
+    type: OS::Nova::Server
+    properties:
+      flavor:  { get_resource: 'smallish_flavor' }
+      image: centos
+      networks: [{"port": { get_resource: "dc_prov_port"}}]
