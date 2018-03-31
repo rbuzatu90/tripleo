@@ -1,4 +1,5 @@
 for i in `ironic node-list | grep power | awk '{print $2}'`; do ironic node-delete $i;done
+for i in `nova list | grep -v 'Status\|\+' | awk '{print $2}'`; do nova delete $i;done
 #crudini --set ~/undercloud.conf DEFAULT rpc_response_timeout 600
 
 upload-swift-artifacts -f my_scripts.tgz --environment deploy_artifacts.yaml

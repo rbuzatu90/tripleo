@@ -154,26 +154,6 @@ resources:
                   addresses:
                     -
                       ip_netmask: {get_param: TenantIpSubnet}
-#            -
-#              type: interface
-#              name: nic3
-#              use_dhcp: false
-#              dns_servers: {get_param: DnsServers}
-#              addresses:
-#                -
-#                  ip_netmask: {get_param: ExternalIpSubnet}
-#              routes:
-#                -
-#                  default: true
-#                  next_hop: {get_param: ExternalInterfaceDefaultRoute}
-#              addresses:
-#                -
-#                  ip_netmask:
-#                    list_join:
-#                      - '/'
-#                      - - {get_param: ControlPlaneIp}
-#                        - {get_param: ControlPlaneSubnetCidr}
-
 
                 # Uncomment when including environments/network-management.yaml
                 # If setting default route on the Management interface, comment

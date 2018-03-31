@@ -86,6 +86,8 @@
   HostnameFormatDefault: '%stackname%-compute-%index%'
   ServicesDefault:
     - OS::TripleO::Services::CACerts
+    - OS::TripleO::Services::Selinux
+    - OS::TripleO::Services::TripleoSelinux
     - OS::TripleO::Services::CephClient
     - OS::TripleO::Services::CephExternal
     - OS::TripleO::Services::Timezone

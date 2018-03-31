@@ -24,7 +24,8 @@ for i in /usr/share/rhosp-director-images/overcloud-full-latest-10.0.tar /usr/sh
 # Set root password
 # Set alias for vim
 # Set undercloud hostname
-openstack overcloud image upload --image-path $IMAGES_DIR
+# Set disable_root:0 in /etc/cloud/cloud.cfg
+openstack overcloud image upload --update-existing --image-path $IMAGES_DIR
 openstack subnet set --dns-nameserver 8.8.8.8 <SUBNET_ID>
 
 

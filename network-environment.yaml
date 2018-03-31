@@ -31,7 +31,9 @@ parameter_defaults:
   ExtraConfig:
     tripleo::profile::base::sshd::options:
       PasswordAuthentication: 'yes'
-      AuthorizedKeysFile: '/home/heat-admin/.ssh/authorized_keys'
+      PermitRootLogin: 'yes'
+      UseDNS: 'no'
+
 #    tripleo::firewall::manage_firewall: true
 #    tripleo::firewall::rules:
 #      '300 allow nagios 1':

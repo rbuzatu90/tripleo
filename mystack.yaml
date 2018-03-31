@@ -1,8 +1,14 @@
 heat_template_version: 2015-04-30
 
 parameters:
+  datacentre_provider_network_ip:
+    type: string
+    label: floating ip
+    description: floating IP
+    default: 192.168.122.201
 
 resources:
+
   smallish_flavor:
     type: OS::Nova::Flavor
     properties:
@@ -15,15 +21,29 @@ resources:
     type: OS::Neutron::ProviderNet
     properties:
       name: 'datacentre-provider-network'
-      network_type: 'vlan'
+      network_type: 'flat'
       physical_network: 'datacentre'
-      segmentation_id: 3604
+
+  subnet_1:
+    type: OS::Neutron::Subnet
+    properties:
+      name: subnet_1
+      cidr: 192.168.122.0/24
+      enable_dhcp: true
+      allocation_pools:
+         - start: 192.168.122.200
+           end: 192.168.122.30
+      gateway_ip: 192.168.122.1
+      network_id: { get_resource: datacentre_provider_network }
 
   dc_prov_port:
     type: OS::Neutron::Port
     properties:
       name: spgw-2_port
       network: { get_resource: datacentre_provider_network }
+      fixed_ips:
+        - subnet: { get_resource: datacentre_provider_subnet }
+          ip_address: { get_param: datacentre_provider_network_ip }
 
   my_vm1:
     type: OS::Nova::Server
