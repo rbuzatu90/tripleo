@@ -1,0 +1,26 @@
+heat_template_version: 2014-10-16
+
+resources:
+  userdata:
+    type: OS::Heat::MultipartMime
+    properties:
+      parts:
+      - config: {get_resource: root_password}
+#      - config: {get_resource: wipe_disk}
+
+#  wipe_disk:
+#    type: OS::Heat::SoftwareConfig
+#    properties:
+#      config: {get_file: wipe-disk.sh}
+
+  root_password:
+    type: OS::Heat::SoftwareConfig
+    properties:
+      config: |
+        #!/bin/bash
+        echo "mypasswd" | passwd --stdin root
+
+outputs:
+  OS::stack_id:
+    value: {get_resource: userdata}
+
