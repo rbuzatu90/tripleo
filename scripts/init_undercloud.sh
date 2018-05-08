@@ -23,6 +23,9 @@ for i in /usr/share/rhosp-director-images/overcloud-full-latest-10.0.tar /usr/sh
 # Set alias for vim
 # Set undercloud hostname
 # Set disable_root:0 in /etc/cloud/cloud.cfg
+#export LIBGUESTFS_BACKEND=direct
+#virt-customize -a overcloud-full.qcow2 --root-password password:mypasswd
+#virt-customize -a overcloud-full.qcow2 --run-command 'echo "192.168.122.10 uc.mylab.test" >> /etc/hosts; echo alias vim="vi" >> /etc/profile; alias rsync="rsync --progress" >> /etc/profile; sed -i "s/disable_root.*/disable_root: 0/" /etc/cloud/cloud.cfg; sed -i "s/#UseDNS.*/UseDNS no/" /etc/ssh/sshd_config'
 openstack overcloud image upload --update-existing --image-path $IMAGES_DIR
 openstack subnet set --dns-nameserver 8.8.8.8 <SUBNET_ID>
 
