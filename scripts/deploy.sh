@@ -1,22 +1,23 @@
 #!/bin/bash
 
 BASE_DIR=/root/tripleo
+TEMPLATE_DIR=/root/tripleo/templates
 IMAGES_DIR=$BASE_DIR/../images/
 UNDERCLOUD_RC_FILE=$BASE_DIR/stackrc
 OVERCLOUD_RC_FILE=$BASE_DIR/overcloudrc.v3
-TOPOLOGY_FILE=$BASE_DIR/topology.yaml
+TOPOLOGY_FILE=$TEMPLATE_DIR/topology.yaml
 NETWORK_ISOLATION=/usr/share/openstack-tripleo-heat-templates/environments/network-isolation.yaml
 #NETWORK_ISOLATION=/usr/share/openstack-tripleo-heat-templates/environments/network-isolation.yaml
-NETWORK_ENVIRONMENT=$BASE_DIR/network-environment.yaml
-STORAGE_ENVIRONMENT=$BASE_DIR/storage-environment.yaml
-ENABLE_TLS=$BASE_DIR/tls/enable-tls.yaml
-INJECT_TRUST_ANCHOR=$BASE_DIR/tls/inject-trust-anchor.yaml
+NETWORK_ENVIRONMENT=$TEMPLATE_DIR/network-environment.yaml
+STORAGE_ENVIRONMENT=$TEMPLATE_DIR/storage-environment.yaml
+ENABLE_TLS=$TEMPLATE_DIR/tls/enable-tls.yaml
+INJECT_TRUST_ANCHOR=$TEMPLATE_DIR/tls/inject-trust-anchor.yaml
 TLS_ENDPOINTS=/usr/share/openstack-tripleo-heat-templates/environments/tls-endpoints-public-dns.yaml
-ENV_RHEL_REG=$BASE_DIR/extraconfig/pre_deploy/rhel-registration/environment-rhel-registration.yaml
+ENV_RHEL_REG=$TEMPLATE_DIR/extraconfig/pre_deploy/rhel-registration/environment-rhel-registration.yaml
 #RHEL_REG_RESOURCE_REG=/usr/share/openstack-tripleo-heat-templates/extraconfig/pre_deploy/rhel-registration/rhel-registration-resource-registry.yaml
-RHEL_REG_RESOURCE_REG=$BASE_DIR/extraconfig/pre_deploy/rhel-registration/rhel-registration-resource-registry.yaml
-FIXED_IPS=$BASE_DIR/fixed-ips.yaml
-ARTIFACTS=$BASE_DIR/deploy_artifacts.yaml
+RHEL_REG_RESOURCE_REG=$TEMPLATE_DIR/extraconfig/pre_deploy/rhel-registration/rhel-registration-resource-registry.yaml
+FIXED_IPS=$TEMPLATE_DIR/fixed-ips.yaml
+ARTIFACTS=$TEMPLATE_DIR/deploy_artifacts.yaml
 
 # Log cleaning 
 rm -rf /var/log/nova/*
