@@ -25,9 +25,6 @@ parameter_defaults:
   StorageMgmtNetworkVip: 172.19.0.10
   PublicVirtualFixedIPs: [{'ip_address':'192.168.122.101'}]
 
-  controllerExtraConfig:
-    neutron::agents::metadata::auth_url: http://192.168.2.25:35357/v2.0
-
   ExtraConfig:
     tripleo::profile::base::sshd::options:
       PasswordAuthentication: 'yes'
