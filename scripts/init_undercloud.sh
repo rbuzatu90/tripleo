@@ -15,7 +15,7 @@ INJECT_TRUST_ANCHOR=$BASE_DIR/inject-trust-anchor.yaml
 FIXED_IPS=$BASE_DIR/fixed-ips.yaml
 
 source $UNDERCLOUD_RC_FILE
-yum install rhosp-director-images rhosp-director-images-ipa
+yum install -y rhosp-director-images rhosp-director-images-ipa
 cd $IMAGES_DIR
 for i in /usr/share/rhosp-director-images/overcloud-full-latest-10.0.tar /usr/share/rhosp-director-images/ironic-python-agent-latest-10.0.tar; do tar -xvf $i; done
 # Customize overcloud img
