@@ -1,7 +1,7 @@
 #!/bin/bash
 
 BASE_DIR=/root/tripleo
-TEMPLATE_DIR=/root/tripleo/templates
+TEMPLATE_DIR=$BASE_DIR/templates
 IMAGES_DIR=$BASE_DIR/../images/
 UNDERCLOUD_RC_FILE=$BASE_DIR/stackrc
 OVERCLOUD_RC_FILE=$BASE_DIR/overcloudrc.v3
