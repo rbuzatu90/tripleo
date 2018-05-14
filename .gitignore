@@ -3,3 +3,5 @@ overcloudrc.v3
 ssl_cert/
 stackrc
 tempest-deployer-input.conf
+scripts/overcloud
+scripts/tempest*
