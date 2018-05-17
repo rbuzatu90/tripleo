@@ -28,7 +28,11 @@ instackenv['nodes'] = []
 
 controler_naming_pattern="controller,control,ctrl,cntrl"
 compute_naming_pattern="cmpt,compute"
-
+# Example of input file
+# 14:9e:cf:45:b8:bb 10.171.54.207 root password1 controller1
+# 14:9e:cf:45:b8:bb 10.171.54.217 root password1 cntrl3
+# 14:9e:cf:45:b8:bb 10.171.54.1 root password1 cmpt1
+# 14:9e:cf:45:b8:bb 10.171.54.2 root password1 compute2
 try:
     for line in lines:
         elt = line.strip().split(delimiter)
