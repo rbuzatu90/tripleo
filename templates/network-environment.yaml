@@ -17,6 +17,7 @@ resource_registry:
   #OS::TripleO::NodeExtraConfigPost: /root/tripleo/postdeploy/postdeploy-tasks.yaml
 
 parameter_defaults:
+  NetworkDeploymentActions: ['CREATE','UPDATE'] # Force os-net-config to execute with the latest network JSON
   GlanceBackend: swift
   ExternalNetworkVip: 192.168.122.101
   InternalApiNetworkVip: 172.16.0.9
