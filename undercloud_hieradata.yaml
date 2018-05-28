@@ -1,0 +1,6 @@
+keystone::wsgi::apache::threads: 1
+keystone::wsgi::apache::workers: "%{::processorcount}"
+heat::api::workers: 0
+heat::api_cfn::workers: 0
+heat::api_cloudwatch::workers: 0
+heat::engine::num_engine_workers: 0
