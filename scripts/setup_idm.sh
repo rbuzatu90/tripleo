@@ -11,8 +11,21 @@ echo "Setting UP IdM with realm: $realm"
 
 yum update -y 
 #reboot
-yum install -y ipa-server.x86_64 ipa-server-dns.noarch ipa-server-trust-ad.x86_64 samba
+yum install -y ipa-server.x86_64 ipa-server-dns.noarch ipa-server-trust-ad.x86_64 samba firewalld
 
 hostnamectl set-hostname "$hostname.$domain"
 echo "$IP $hostname.$domain $hostname" >> /etc/hosts
 ipa-server-install --domain=$domain --realm=$realm --setup-adtrust --setup-dns --enable-compat --no-forwarders --no-reverse --ds-password `echo $dm_password` --admin-password `echo $admin_password`
+
+
+firewall-cmd \
+   --permanent \
+   --add-service=freeipa-ldaps \
+   --add-service=freeipa-ldap \
+   --add-service=freeipa-replication \
+   --add-service=freeipa-trust \
+   --add-service=https \
+   --add-service=http \
+   --add-service=dns \
+   --add-service=ntp
+firewall-cmd --reload
