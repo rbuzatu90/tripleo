@@ -14,6 +14,13 @@ ENABLE_TLS=$BASE_DIR/enable-tls.yaml
 INJECT_TRUST_ANCHOR=$BASE_DIR/inject-trust-anchor.yaml
 FIXED_IPS=$BASE_DIR/fixed-ips.yaml
 
+useradd stack
+passwd stack
+echo "stack ALL=(root) NOPASSWD:ALL" | tee -a /etc/sudoers.d/stack
+chmod 0440 /etc/sudoers.d/stack
+su - stack
+mkdir ~/images/
+
 source $UNDERCLOUD_RC_FILE
 yum install -y rhosp-director-images rhosp-director-images-ipa
 cd $IMAGES_DIR
@@ -23,6 +30,7 @@ for i in /usr/share/rhosp-director-images/overcloud-full-latest-10.0.tar /usr/sh
 # Set alias for vim
 # Set undercloud hostname
 # Set disable_root:0 in /etc/cloud/cloud.cfg
+yum install -y libguestfs-tools.noarch
 #export LIBGUESTFS_BACKEND=direct
 #virt-customize -a overcloud-full.qcow2 --root-password password:mypasswd
 #virt-customize -a overcloud-full.qcow2 --run-command 'echo "192.168.122.10 uc.mylab.test" >> /etc/hosts; echo alias vim="vi" >> /etc/profile; alias rsync="rsync --progress" >> /etc/profile; sed -i "s/disable_root.*/disable_root: 0/" /etc/cloud/cloud.cfg; sed -i "s/#UseDNS.*/UseDNS no/" /etc/ssh/sshd_config'
