@@ -4,3 +4,4 @@ heat::api::workers: 0
 heat::api_cfn::workers: 0
 heat::api_cloudwatch::workers: 0
 heat::engine::num_engine_workers: 0
+nova::compute::ironic::max_concurrent_builds: 14
