@@ -39,6 +39,16 @@ EOF
 hammer subscription upload --file "$manifest" --organization "$organization"
 hammer organization update --redhat-repository-url http://10.0.0.1 --name "$organization"
 
+# Unpack CONTENT ISO TBD
+#for i in  `ls | grep iso`; do
+#  echo "Processing $i"
+#  mkdir /tmp/iso
+#  mount $i /tmp/iso
+#  cp -vr /tmp/iso /mnt/SatelliteISOs/
+#  umount /tmp/iso
+#done
+
+
 # Product "Red Hat Enterprise Linux Server"
 prod=$(hammer product list --organization-id 1 | egrep -i "Red.Hat.Enterprise.Linux.Server\s\s" | awk '{print $1}')
 
@@ -86,3 +96,6 @@ hammer content-view publish --id $cv --organization-id 1 --async
 hammer content-view info --id $cv
 
 hammer activation-key create --name "$activ_key" --organization-id 1 --content-view-id $cv --lifecycle-environment Library
+prod=$(hammer product list --organization-id 1 | egrep -i "Red.Hat.Enterprise.Linux.Server\s\s" | awk '{print $1}')
+repo=$(hammer repository-set list --organization-id 1 --product-id $prod | egrep -i "\|.Red.Hat.Enterprise.Linux.7.Server\s.RPMs"  | awk '{print $1}')
+hammer repository-set enable --id $repo --product-id $prod --organization-id 1 --releasever 7Server --basearch x86_64
