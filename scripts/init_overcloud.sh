@@ -22,6 +22,8 @@ echo "Stack complete is $STACK_COMPLETE and deployment exited with $DEPLOYMENT_R
 if [[ $DEPLOYMENT_RESULT -eq 0 ]] && [[ $STACK_COMPLETE -eq 0 ]]; then
     source $OVERCLOUD_RC_FILE
     glance image-create --name "centos" --visibility public --disk-format qcow2 --container-format bare --progress --file $IMAGES_DIR/CentOS-7-x86_64-GenericCloud.qcow2
+    # set password for centos image; add public key, install tcpdump nmap wget
+    # lower DHCP timeout on image virt-customize -a CentOS-7-x86_64-GenericCloud.qcow2 --run-command 'echo -e "timeout 20;\nretry 10;" > /etc/dhcp/dhclient.conf'
     #glance image-create --name "cirros" --is-public true --disk-format qcow2 --container-format bare --progress --file $IMAGES_DIR/cirros-0.3.5-x86_64-disk.img
 
     nova secgroup-add-rule default icmp -1 -1 0.0.0.0/0
