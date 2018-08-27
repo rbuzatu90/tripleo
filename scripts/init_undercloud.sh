@@ -49,5 +49,5 @@ openstack overcloud profiles list
 
 openstack baremetal introspection data save <ironic-node> | jq ".inventory.disks"
 
-
+for i in $(openstack baremetal node list -c Name -f value); do openstack baremetal node set --property root_device='{"name":"/dev/sda"}' $i; done
 openstack baremetal node set --property root_device='{"serial": "61866da04f380d001ea4e13c12e36ad6"}' <ironic-node>
