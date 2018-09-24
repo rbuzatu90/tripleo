@@ -49,7 +49,7 @@ hammer organization update --redhat-repository-url http://10.0.0.1 --name "$orga
 #while read i; do
 #  file=`echo $i | awk '{print $1}'`
 #  valid_checksum=`echo $i | awk '{print $2}'`
-#  actual_checksum=`shasum -a 256 $file`
+#  actual_checksum=`shasum -a 256 $file | awk '{print $1}'`
 #  if [ "$actual_checksum" == "$valid_checksum" ]; then
 #    echo "File $file OK"
 #  else
