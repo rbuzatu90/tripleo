@@ -41,8 +41,21 @@ hammer organization update --redhat-repository-url http://10.0.0.1 --name "$orga
 
 #for i in `grep "sat-6-isos--openstack-10\|sat-6-isos--rhel-7-server-x86_64" content | grep https | awk '{print $3}' | grep -o "https.*" | tr -d \"` ; do
 #    name=`echo $i| grep -o sat-6-isos.*.iso`
+#    sha=`echo $i | awk -F "/" '{print $10}'`
+#    echo $name $sha >> checksum
 #    echo wget -c $i -O $name -q --show-progress &
 #done
+
+#while read i; do
+#  file=`echo $i | awk '{print $1}'`
+#  valid_checksum=`echo $i | awk '{print $2}'`
+#  actual_checksum=`shasum -a 256 $file`
+#  if [ "$actual_checksum" == "$valid_checksum" ]; then
+#    echo "File $file OK"
+#  else
+#    echo "File $file NOT OK"
+#  fi
+#done < checksum
 
 # Unpack CONTENT ISO TBD
 #for i in  `ls | grep iso`; do
