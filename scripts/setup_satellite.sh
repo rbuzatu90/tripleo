@@ -39,6 +39,11 @@ EOF
 hammer subscription upload --file "$manifest" --organization "$organization"
 hammer organization update --redhat-repository-url http://10.0.0.1 --name "$organization"
 
+#for i in `grep "sat-6-isos--openstack-10\|sat-6-isos--rhel-7-server-x86_64" content | grep https | awk '{print $3}' | grep -o "https.*" | tr -d \"` ; do
+#    name=`echo $i| grep -o sat-6-isos.*.iso`
+#    echo wget -c $i -O $name &
+#done
+
 # Unpack CONTENT ISO TBD
 #for i in  `ls | grep iso`; do
 #  echo "Processing $i"
