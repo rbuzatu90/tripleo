@@ -11,6 +11,8 @@ rhel_7_server_rhceph_2_ools_rpms=$server_path/ceph-tools/2/os/
 repo_list=(rhel-7-server-rpms rhel-7-server-extras-rpms rhel-7-server-rh-common-rpms rhel-7-server-satellite-tools-6.2-rpms rhel-ha-for-rhel-7-server-rpms rhel-7-server-openstack-10-rpms rhel-7-server-rhceph-2-osd-rpms rhel-7-server-rhceph-2-mon-rpms rhel-7-server-rhceph-2-tools-rpms)
 repo_path=($rhel_7_server_rpms $rhel_7_server_extras_rpms $rhel_7_server_rh_common_rpms $rhel_7_server_satellite_tools_6_2_rpms $rhel_ha_for_rhel_7_server_rpms $rhel_7_server_openstack_10_rpms $rhel_7_server_rhceph_2_osd_rpms $rhel_7_server_rhceph_2_mon_rpms $rhel_7_server_rhceph_2_ools_rpms)
 
+yum install -y yum-utils createrepo
+
 sync_repos(){
   for i in {0..8}; do
     echo reposync --norepopath -d -r ${repo_list[$i]} -p ${repo_path[$i]}
