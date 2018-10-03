@@ -48,6 +48,7 @@ create_repo_file(){
   for i in {0..8}; do
     echo [${repo_list[$i]}] >> myrepo.repo
     echo "baseurl = http://$server/$additional_path${repo_path[$i]}" >> myrepo.repo
+    echo "name = ${repo_list[$i]}" >> myrepo.repo
   done
 }
 
