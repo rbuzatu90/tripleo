@@ -4,7 +4,17 @@ Check fencing and fencing agents are having constraints
 Check Ceph mapping
 
 
-
+#contrail
+subnet=10.0.1.0/24
+ip1=10.0.1.10
+ip2=10.0.1.11
+vlan=3201
+physnet=physnet1
+net_name="sriov"
+neutron net-create --provider:physical_network=$physnet --provider:segmentation_id=$vlan $net_name
+neutron subnet-create --name $net_name-subnet $net_name $subnet
+neutron port-create --fixed-ip subnet_id=`openstack subnet show $net_name-subnet -c id -f value`,ip_address=$ip1 --name $net_name-port1 `openstack network show $net_name -c id -f value` --binding:vnic_type direct
+neutron port-create --fixed-ip subnet_id=`openstack subnet show $net_name-subnet -c id -f value`,ip_address=$ip2 --name $net_name-port2 `openstack network show $net_name -c id -f value` --binding:vnic_type direct
 
 
 Create Availability Zone
