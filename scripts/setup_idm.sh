@@ -16,7 +16,7 @@ yum install -y ipa-server.x86_64 ipa-server-dns.noarch ipa-server-trust-ad.x86_6
 hostnamectl set-hostname "$hostname.$domain"
 echo "$IP $hostname.$domain $hostname" >> /etc/hosts
 # Install server
-ipa-server-install --domain=$domain --realm=$realm --setup-adtrust --setup-dns --enable-compat --no-forwarders --ds-password `echo $dm_password` --admin-password `echo $admin_password`
+ipa-server-install --domain=$domain --realm=$realm --setup-adtrust --setup-dns --enable-compat --no-forwarders --ds-password `echo $dm_password` --admin-password `echo $admin_password` --ca-subject="CN=$hostname.$domain,O=$realm" --subject-base="O=$realm"
 
 # Install replica
 ipa-replica-install --principal admin --admin-password $admin_password --force-join
