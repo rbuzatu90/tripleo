@@ -35,6 +35,13 @@ firewall-cmd \
    --add-service=ntp
 firewall-cmd --reload
 
+# Generate cert for OpenStack API endpoint
+# Using openssl commands generate key and CSR for openstack endpoint
+# Create a host principal for the requiered CN / SAN. All should have separate principals
+ipa host-add overcloud.mylab.test --force
+# Based on the previously created CSR generate the certificate
+ipa cert-request srv_overcloud.mylab.test.csr --principal=host/overcloud.mylab.test --profile-id=caIPAserviceCert --certificate-out=srv_overcloud.mylab.test.crt
+
 ipa group-add --desc="OpenStack Users" grp-openstack
 ipa user-add svc-ldap --first=SVC --last=LDAP  --email=svc-ldap@mylab.test --homedir=/home/work/svc-ldap --password
 ipa group-add-member --users=svc-ldap grp-openstack
