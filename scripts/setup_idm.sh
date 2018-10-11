@@ -36,5 +36,5 @@ firewall-cmd \
 firewall-cmd --reload
 
 ipa group-add --desc="OpenStack Users" grp-openstack
-ipa user-add svc-ldap --first=SVC --last=LDAP  --email=svc-ldap@example.com --homedir=/home/work/svc-ldap --password
+ipa user-add svc-ldap --first=SVC --last=LDAP  --email=svc-ldap@mylab.test --homedir=/home/work/svc-ldap --password
 ipa group-add-member --users=svc-ldap grp-openstack
