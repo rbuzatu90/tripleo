@@ -45,3 +45,8 @@ ipa cert-request srv_overcloud.mylab.test.csr --principal=host/overcloud.mylab.t
 ipa group-add --desc="OpenStack Users" grp-openstack
 ipa user-add svc-ldap --first=SVC --last=LDAP  --email=svc-ldap@mylab.test --homedir=/home/work/svc-ldap --password
 ipa group-add-member --users=svc-ldap grp-openstack
+
+# Check DNS records are in place
+NAMESERVER=172.17.11.137
+DOMAIN=mylab.test
+for i in _ldap._tcp _kerberos._tcp _kerberos._udp _kerberos-master._tcp _kerberos-master._udp _ntp._udp ; do dig @${NAMESERVER} ${i}.${DOMAIN} srv +nocmd +noquestion +nocomments +nostats +noaa +noadditional +noauthority; done | egrep "^_"
