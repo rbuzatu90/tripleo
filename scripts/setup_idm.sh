@@ -29,6 +29,7 @@ firewall-cmd \
    --add-service=freeipa-ldap \
    --add-service=freeipa-replication \
    --add-service=freeipa-trust \
+   --add-service=kerberos \
    --add-service=https \
    --add-service=http \
    --add-service=dns \
