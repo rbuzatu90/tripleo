@@ -22,6 +22,7 @@ def gen_director_ssh_config():
     ip_addr = info[6].split("=")[1]
     print "Host", fqdn, long_name, short_name, ip_addr 
     print "User", user
+    print "Hostname", ip_addr 
     print "StrictHostKeyChecking no"
     print "UserKnownHostsFile /dev/null"
     print "IdentityFile", ssh_key
