@@ -7,6 +7,8 @@ nova list | grep Running | awk '{print $4, $12}' | sed 's/ctlplane=//g' | awk -F
 #crudini --set ~/undercloud.conf DEFAULT rpc_response_timeout 600
 
 upload-swift-artifacts -f my_scripts.tgz --environment deploy_artifacts.yaml
+rally verify start --pattern tempest.api.compute.admin
+rally task start rally_boot.json
 
 
 git clone https://github.com/openstack/rally
