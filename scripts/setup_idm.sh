@@ -55,3 +55,14 @@ ipa group-add-member --users=svc-ldap grp-openstack
 NAMESERVER=172.17.11.137
 DOMAIN=mylab.test
 for i in _ldap._tcp _kerberos._tcp _kerberos._udp _kerberos-master._tcp _kerberos-master._udp _ntp._udp ; do dig @${NAMESERVER} ${i}.${DOMAIN} srv +nocmd +noquestion +nocomments +nostats +noaa +noadditional +noauthority; done | egrep "^_"
+
+# Check client has open ports for IdM integration
+ports="80 443 88 389 636 464 749"
+hosts="10.237.191.78 10.237.191.79 10.237.221.78 10.237.221.79"
+for port in $ports; do
+    for host in $hosts; do
+        echo "========= $host  $port ========= "
+        timeout 1 nc -v $host $port
+    done
+done
+
