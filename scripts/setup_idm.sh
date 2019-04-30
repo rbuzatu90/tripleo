@@ -42,7 +42,11 @@ firewall-cmd \
    --add-service=http \
    --add-service=dns \
    --add-service=ntp
-firewall-cmd --reload
+firewall-cmd --reloada
+
+ipa user-add rbuz --first=Remus --last=Buzatu --password
+ipa user-mod rbuz --user-auth-type=otp --user-auth-type=password
+ipa otptoken-add --owner=rbuz rbuz-otp --digits=6 --counter=1 --type=hotp
 
 # Generate cert for OpenStack API endpoint
 # Using openssl commands generate key and CSR for openstack endpoint
