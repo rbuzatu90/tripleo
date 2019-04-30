@@ -16,7 +16,13 @@ yum install -y ipa-server.x86_64 ipa-server-dns.noarch ipa-server-trust-ad.x86_6
 hostnamectl set-hostname "$hostname.$domain"
 echo "$IP $hostname.$domain $hostname" >> /etc/hosts
 # Install server
-ipa-server-install --domain=$domain --realm=$realm --setup-adtrust --setup-dns --enable-compat --no-forwarders --ds-password `echo $dm_password` --admin-password `echo $admin_password` --ca-subject="CN=$hostname.$domain,O=$realm" --subject-base="O=$realm"
+ipa-server-install --domain=$domain --realm=$realm --ds-password `echo $dm_password` --admin-password `echo $admin_password` --ca-subject="CN=$hostname.$domain,O=$realm" --subject-base="O=$realm" --setup-dns --forwarder=8.8.8.8 --auto-reverse --setup-adtrust --enable-compat
+ipa dnszone-add $domain # create forward zone
+ipa dnszone-add --name-from-ip=192.168.122.0/24 # create reverse zone
+ipa dnsrecord-add $domain idm1 --a-rec=192.168.122.8 --a-create-reverse
+ipa dnsrecord-add $domain idm2 --a-rec=192.168.122.9 --a-create-reverse
+ipa dnsrecord-add 122.168.192.in-addr.arpa. 8 --ptr-rec=idm1.$domain.
+ipa dnsrecord-add 122.168.192.in-addr.arpa. 9 --ptr-rec=idm2.$domain.
 
 # Install replica
 ipa-client-install --principal admin -w $admin_password --force-join --mkhomedir -U
