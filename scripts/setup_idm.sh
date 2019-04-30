@@ -19,7 +19,9 @@ echo "$IP $hostname.$domain $hostname" >> /etc/hosts
 ipa-server-install --domain=$domain --realm=$realm --setup-adtrust --setup-dns --enable-compat --no-forwarders --ds-password `echo $dm_password` --admin-password `echo $admin_password` --ca-subject="CN=$hostname.$domain,O=$realm" --subject-base="O=$realm"
 
 # Install replica
+ipa-client-install --principal admin -w $admin_password --force-join --mkhomedir -U
 ipa-replica-install --principal admin --admin-password $admin_password --force-join
+ipa-ca-install; ipa-dns-install
 
 systemctl enable firewalld
 systemctl start firewalld
