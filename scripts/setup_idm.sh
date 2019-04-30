@@ -81,3 +81,27 @@ for port in $ports; do
     done
 done
 
+openssl x509 -req -in ipa.csr -days 3640 -CA CA_MyLab.pem -CAkey CA_MyLab.key -CAserial CA_Serial.srl -out srv.crt -extensions v3_req -extfile <(
+cat <<-EOF
+[req]
+keyUsage = critical,digitalSignature,keyEncipherment
+default_md = sha256
+distinguished_name = dn
+req_extensions  = v3_req
+subjectKeyIdentifier = hash
+x509_extensions = usr_cert
+
+[ usr_cert ]
+basicConstraints = critical,CA:true
+nsCertType = client, server, email
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid,issuer
+
+[ v3_req ]
+basicConstraints = critical,CA:true
+nsCertType = sslCA, emailCA
+keyUsage = nonRepudiation, cRLSign, digitalSignature, keyCertSign
+subjectKeyIdentifier = hash
+EOF
+
