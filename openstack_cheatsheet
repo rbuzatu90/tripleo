@@ -85,7 +85,7 @@ nova floating-ip-associate myvm 10.1.1.53 # openstack nova floating
 
 nova interface-attach --port-id id vm_name # openstack nova interface attach
 
-
+/usr/lib/python2.7/site-packages/ironic/drivers/modules/ipxe_config.template # IPXE config file
 
 sed -i 's/^service_plugins.*/service_plugins =router,qos,lbaas/g' /etc/neutron/neutron.conf
 systemctl restart neutron-server.service
