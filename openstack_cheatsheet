@@ -64,9 +64,7 @@ neutron router-gateway-set external-router public # openstack neutron create sub
 
 
 
-
-
-
+openstack stack resource signal --data '{"deploy_stdout": "", "deploy_stderr": "", "update_managed_packages": "false", "deploy_status_code": 0}' 06ec0e7f-48bd-47ee-8f29-d3543535f373 0 # force fail signal to stack
 
 openstack router create external-router # openstack neutron create router
 openstack router add subnet external-router priv_subnet_id # openstack neutron router
