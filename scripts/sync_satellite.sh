@@ -22,9 +22,10 @@ sync_repos(){
 get_content_isos(){
   for i in `grep "sat-6-isos--openstack-10\|sat-6-isos--rhel-7-server-x86_64" content | grep https | awk '{print $3}' | grep -o "https.*" | tr -d \"` ; do
     name=`echo $i| grep -o sat-6-isos.*.iso`
-    sha=`echo $i | awk -F "/" '{print $10}'`
+    sha=`echo $i | awk -F "/" '{print $9}'`
     echo $name $sha >> checksum
-    echo wget -c $i -O $name -q --show-progress &
+    url=${i/amp;/}
+    echo wget -c "$url" -O $name -q --show-progress &
   done
 }
 
