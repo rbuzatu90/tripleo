@@ -4,6 +4,7 @@ for i in `nova list | grep ACTIVE | awk '{print $12}' | grep -o [0-9.]*`;do ssh 
 for i in `nova list | grep ACTIVE | awk '{print $12}' | grep -o [0-9.]*`;do rsync --rsync-path="sudo rsync" ../.ssh/id_rsa $i:/root/.ssh/;done
 for i in `ironic node-list | grep "None\|True" | awk '{print $2}'`; do ironic node-set-power-state $i on ; ironic node-set-maintenance $i off ;done
 nova list | grep Running | awk '{print $4, $12}' | sed 's/ctlplane=//g' | awk -F '-' '{print $7}'
+for i in `nova list | grep ERROR | awk '{print $2}'`; do nova reset-state $i --active; nova stop $i; nova start $i;done # recover from failed migration evacuation
 
 #crudini --set ~/undercloud.conf DEFAULT rpc_response_timeout 600
 
