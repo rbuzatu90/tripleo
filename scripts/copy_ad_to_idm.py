@@ -12,61 +12,6 @@ IDM_DOMAIN = 'kerb.mylab.test'
 IDM_REALM = IDM_DOMAIN.upper()
 IDM_DC_PATH = 'dc=kerb,dc=mylab,dc=test'
 
-AD_LDAP_URI = 'ldaps://ad.mylab.test'
-AD_SEARCH_BASE = 'dc=mylab,dc=test'
-AD_GROUP = "CN=RSA-Exclussions-SG,OU=Tier0-SG,OU=MyLab OU,DC=MYLAB,DC=TEST"  #redhat-satellite-sg
-AD_QUERY = "(&(!(objectclass=computer))(objectclass=user)(|(memberOf=" + AD_GROUP + ")))"
-AD_USER = 'idmsrv@mylab.test'
-AD_USER_PASSWD = '******'
-ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, ldap.OPT_X_TLS_NEVER)
-
-def search(ldap_uri, base, query, user, password):
-    print 'Searching on', ldap_uri,  base, query
-    uids = set()
-    try:
-        l = ldap.initialize(ldap_uri)
-        #l.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, ldap.OPT_X_TLS_NEVER)
-        #l.protocol_version = ldap.VERSION3
-	#l.set_option(ldap.OPT_REFERRALS, 0)
-	l.simple_bind_s(user, password)
-        search_scope = ldap.SCOPE_SUBTREE
-        retrieve_attributes = ["memberOf", "sAMAccountName"]
-
-        ldap_result_id = l.search(
-            base,
-            search_scope,
-            query,
-            retrieve_attributes
-        )
-        result_set = []
-        while 1:
-            result_type, result_data = l.result(ldap_result_id, 0)
-            if (result_data == []):
-                break
-            else:
-                if result_type == ldap.RES_SEARCH_ENTRY:
-                    result_set.append(result_data)
-
-        if len(result_set) == 0:
-            print('No results found.')
-            return
-        count = 0
-        for i in range(len(result_set)):
-            for entry in result_set[i]:
-                try:
-                    uid = entry[1]['ssAMAccountName'][0]
-                    count += 1
-                    uids.add(uid)
-                except:
-                    pass
-    except ldap.LDAPError, e:
-        print('LDAPError: %s.' % e)
-
-    finally:
-        l.unbind_s()
-        return(uids)
-
-
 def create_user(user_id):
     print 'Adding user', user_id
     user_uuid=str(uuid.uuid4())
@@ -101,19 +46,6 @@ def create_user(user_id):
             print('LDAPError: %s.' % e)
     print 'done'
     
-def delete_user(user_id):
-    print "Deleting user", user_id
-    deleteDN = 'uid=' + user_id + ',cn=users,cn=accounts,' + IDM_DC_PATH
-    try:
-    	idm_ldap.delete_s(deleteDN)
-    except ldap.LDAPError, e:
-        if e.message['desc'] == 'No such object':
-            print "User", user_id, "doesn't exists, nothing to delete now"
-        else:
-            print('LDAPError: %s.' % e)
-
-
-
 def main():
     #IDM_USERS = search(IDM_LDAP_URL, IDM_SEARCH_BASE, IDM_QUERY, IDM_USER, IDM_USER_PASSWD)
     #AD_USERS = search(AD_LDAP_URL, AD_SEARCH_BASE, AD_QUERY)
