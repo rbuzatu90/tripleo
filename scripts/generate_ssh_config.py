@@ -6,27 +6,36 @@ for line in sys.stdin.readlines():
   if 'ACTIVE' in line:
     data.append(line)
 
-domain = 'nfvi.localdomain'
+domain = ''
 user = "heat-admin"
 proxy = "nec-uc"
-ssh_key = "/home/stack/.ssh/id_rsa"
+ssh_key = "~/.ssh/id_rsa"
 subnet = ".".join(data[0].split("|")[6].split("=")[1].split('.')[:3])
 
 
 def gen_director_ssh_config():
+  print "Host *"
+  print "User", user
+  print "StrictHostKeyChecking no"
+  print "UserKnownHostsFile /dev/null"
+  print "IdentityFile", ssh_key
+  print "ProxyJump", proxy
+  print "##############################################"
+
   for line in data:
     info = line.split("|")
     long_name = info[2].strip()
     fqdn = str(info[2] + "." + domain).replace(" ", "")
-    short_name = info[2].split("-")[6].strip()
+    #short_name = info[2].split("-")[6].strip()
+    short_name = ""
     ip_addr = info[6].split("=")[1]
-    print "Host", fqdn, long_name, short_name, ip_addr 
-    print "User", user
+    print "Host", long_name
+#    print "User", user
     print "Hostname", ip_addr 
-    print "StrictHostKeyChecking no"
-    print "UserKnownHostsFile /dev/null"
-    print "IdentityFile", ssh_key
-    print "ProxyJump", proxy
+#    print "StrictHostKeyChecking no"
+#    print "UserKnownHostsFile /dev/null"
+#    print "IdentityFile", ssh_key
+#    print "ProxyJump", proxy
     print "##############################################"
 
 def gen_etc_hosts():
@@ -70,7 +79,7 @@ def gen_ansible_config():
   print subnet + '.1'
   
        
-#gen_director_ssh_config()
+gen_director_ssh_config()
 #gen_etc_hosts()
 #gen_ssh_config()
 gen_ansible_config()
