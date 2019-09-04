@@ -20,7 +20,23 @@ data_header = {'Referer': 'https://idm2.idm.mylab.test/ipa', 'Content-Type': 'ap
 login_json = {'user': user, 'password': password}
 resp = request.post(hostname+login_url, data=login_json)
 
-user_json = { "id": 0, "method": "user_find/1", "params": [ [ ], { "all": 'true', "sizelimit": 0, "version": "2.231" } ] }
+user_search = { "id": 0, "method": "user_find/1", "params": [ [ ], { "all": 'true', "sizelimit": 0, "version": "2.231" } ] 
+user_add = {
+    "id": 0,
+    "method": "user_add/1",
+    "params": [
+        [
+            "testuser"
+        ],
+        {
+            "givenname": "Test",
+            "ipauserauthtype": ["radius"],
+            "ipatokenradiusconfiglink": "Radius-Server",
+            "sn": "User",
+            "version": "2.230"
+        }
+    ]
+}
 raw_data = request.post(hostname+data_url, data=json.dumps(user_json), headers=data_header)
 data = json.loads(raw_data.text)
 
