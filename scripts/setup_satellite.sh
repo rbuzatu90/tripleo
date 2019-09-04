@@ -13,12 +13,23 @@ repo_url=192.168.122.1/iso/
 sat_iso=/root/satellite-6.2.15-rhel-7-x86_64-dvd.iso
 rhel_release=7.4
 
+# Option #1
+#subscription-manager repos --enable=rhel-7-server-rpms \
+#> --enable=rhel-server-rhscl-7-rpms \
+#> --enable=rhel-7-server-satellite-6.4-rpms \
+#> --enable=rhel-7-server-satellite-maintenance-6-rpms \
+#> --enable=rhel-7-server-ansible-2.6-rpms
+#yum install -y satellite
+# End Option #1
+
+# Option #2
 mkdir -p /tmp/sat-mnt
 echo "Mounting satellite ISO"
 mount $sat_iso /tmp/sat-mnt
 echo "Installing satellite dependencies"
 cd /tmp/sat-mnt/
 time ./install_packages
+# End Option #2
 
 #https://access.redhat.com/articles/2258471
 
