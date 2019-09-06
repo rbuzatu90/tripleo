@@ -1,10 +1,12 @@
 import sys
 import os
-from requests.auth import AuthBase
 import requests
 import json
+import logging
 
-hostname = 'https://idm2.idm.mylab.test'
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S')
+
+hostname = 'https://idm1.mylab.test/ipa'
 data_url = '/ipa/json'
 login_url = '/ipa/session/login_password'
 user = 'admin'
@@ -14,13 +16,28 @@ request = requests.Session()
 requests.packages.urllib3.disable_warnings()
 request.verify = False
 
-login_header = {'Referer': 'https://idm2.idm.mylab.test/ipa', 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'text/plain'}
-data_header = {'Referer': 'https://idm2.idm.mylab.test/ipa', 'Content-Type': 'application/json', 'Accept': 'text/json'}
+login_header = {'Referer': hostname, 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'text/plain'}
+data_header = {'Referer': hostname, 'Content-Type': 'application/json', 'Accept': 'text/json'}
 
 login_json = {'user': user, 'password': password}
-resp = request.post(hostname+login_url, data=login_json)
 
-user_search = { "id": 0, "method": "user_find/1", "params": [ [ ], { "all": 'true', "sizelimit": 0, "version": "2.231" } ] 
+try:
+    resp = request.post(hostname+login_url, data=login_json)
+except:
+    logging.debug("Check DNS and reachability", exc_info=True)
+
+user_search = { 
+    "id": 0, 
+    "method": "user_find/1", 
+    "params": [ 
+        [ ],
+        { 
+            "all": 'true', 
+            "sizelimit": 0, 
+            "version": "2.231"
+        }
+    ]
+}
 user_add = {
     "id": 0,
     "method": "user_add/1",
@@ -30,9 +47,13 @@ user_add = {
         ],
         {
             "givenname": "Test",
-            "ipauserauthtype": ["radius"],
-            "ipatokenradiusconfiglink": "Radius-Server",
             "sn": "User",
+            "loginshell": "/bin/bash",
+            "gecos": "User from IdM",
+            "uidnumber": 300100,
+            "gidnumber": 300100,
+            "ipauserauthtype": ["radius"],
+            "ipatokenradiusconfiglink": "My-Radius-Server",
             "version": "2.230"
         }
     ]
