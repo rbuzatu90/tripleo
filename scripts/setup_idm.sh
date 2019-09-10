@@ -26,7 +26,7 @@ ipa dnsrecord-add 122.168.192.in-addr.arpa. 9 --ptr-rec=idm2.$domain.
 
 # Install replica
 ipa-client-install --principal admin -w $admin_password --force-join --mkhomedir -U
-ipa-replica-install --principal admin --admin-password $admin_password --force-join
+ipa-replica-install --principal admin --admin-password $admin_password --force-join # or -P admin -w 'admin_password'
 ipa-ca-install; ipa-dns-install
 
 systemctl enable firewalld
