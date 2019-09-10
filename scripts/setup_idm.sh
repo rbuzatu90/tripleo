@@ -44,6 +44,9 @@ firewall-cmd \
    --add-service=ntp
 firewall-cmd --reloada
 
+ipa sudorule-add --cmdcat=all --hostcat=all all-sudo
+ipa sudorule-add-user --groups=admins all-sudo
+
 ipa user-add rbuz --first=Remus --last=Buzatu --password
 ipa user-mod rbuz --user-auth-type=otp --user-auth-type=password
 ipa otptoken-add --owner=rbuz rbuz-otp --digits=6 --counter=1 --type=hotp
