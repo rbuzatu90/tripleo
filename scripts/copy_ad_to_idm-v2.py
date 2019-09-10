@@ -8,8 +8,8 @@ import json
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 import logging
 
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S')
-#logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S')
+#logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S')
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S')
 
 hostname = 'https://idm1.mylab.test'
 data_url = '/ipa/json'
@@ -42,8 +42,9 @@ def idm_search():
     raw_data = request.post(hostname+data_url, data=json.dumps(user_search), headers=data_header)
     data = json.loads(raw_data.text)
     for idm_user in data['result']['result']:
-        user_uid =str(idm_user['uid'])
+        user_uid = idm_user['uid'][0]
         all_users_uid.add(user_uid)
+    logging.debug("============================ Users are %s ============================", str(all_users_uid))
     return all_users_uid
 
 
@@ -54,9 +55,9 @@ def search(ldap_uri, base, query, user, password):
         l = ldap.initialize(ldap_uri)
         l.protocol_version = ldap.VERSION3
         l.set_option(ldap.OPT_REFERRALS, 0)
+	l.simple_bind_s(user, password)
         search_scope = ldap.SCOPE_SUBTREE
-        #retrieve_attributes = ["sAMAccountName"]  ################ To be enabled
-        retrieve_attributes = ["uid"]
+        retrieve_attributes = ["sAMAccountName"]
         ldap_result_id = l.search(
             base,
             search_scope,
@@ -81,14 +82,12 @@ def search(ldap_uri, base, query, user, password):
         for i in range(len(result_set)):
             for entry in result_set[i]:
                 try:
-                    print entry
-                    uid = entry[1]['uid'][0]
-                    #uid = entry[1]['sAMAccountName'][0]
+                    #uid = entry[1]['uid'][0]
+                    uid = entry[1]['sAMAccountName'][0]
                     count += 1
-                    uids.add(uid)
+                    uids.add(uid.lower())
                 except:
                     logging.debug("sAMAccountName not found in attr", exc_info=True)
-        print "pass =============="
     except ldap.LDAPError, e:
         logging.debug("LDAPError", exc_info=True)
 
@@ -100,7 +99,7 @@ def search(ldap_uri, base, query, user, password):
 
 def create_user(user_id):
     logging.debug("============================ Create User ============================")
-    logging.debug('Adding user %s', user_id)
+    logging.info('Adding user %s', user_id)
     user_add = {
         "id": 0,
         "method": "user_add/1",
@@ -110,9 +109,9 @@ def create_user(user_id):
                 "givenname": user_id,
                 "sn": user_id,
                 "loginshell": "/bin/bash",
-                "gecos": "User from IdM",
+                "gecos": "FromAD",
                 "ipauserauthtype": ["radius"],
-#                "ipatokenradiusconfiglink": "My-Radius-Server", ######## To be added
+                "ipatokenradiusconfiglink": "RSA-Radius",
                 "version": "2.231"
             }
         ]
@@ -149,24 +148,23 @@ def main():
     login_json = {'user': user, 'password': password}
     resp = request.post(hostname+login_url, data=login_json)
     IDM_USERS = idm_search()
-    #IDM_USERS = search(IDM_LDAP_URL, IDM_DC_PATH, IDM_QUERY, IDM_USER, IDM_USER_PASSWD)
-    #print IDM_USERS
-    #AD_USERS = search(AD_LDAP_URL, AD_SEARCH_BASE, AD_QUERY, AD_USER, AD_USER_PASSWD, 'AD')
-    AD_USERS = set(['cottyva', 'kibana', 'tier0_ea5049', 'tier0_ec19707', 'tier0_ec18068', 'rhtestuser', 'tier0_ukhalid', 'DHCPAdmin', 'dpetrella', 'ExchAdmin', 'jsiders', 'VMWareVDI', 'tier0_ec19533', 'tier0_ec14577', 'laker', 'tier0_ea3911', 'CAADmin', 'aj-admin', 'admin', 'Paul_ADM', 'nchaudhry', 'ADFSAdmin', 'manaitestuser', 'mwesterfield'])
-    logging.debug("============================ IdM Users are %s  ============================", IDM_USERS)
-    logging.debug("============================ AD Users are %s  ============================", AD_USERS)
+    AD_USERS = search(AD_LDAP_URL, AD_SEARCH_BASE, AD_QUERY, AD_USER, AD_USER_PASSWD)
+    #AD_USERS = set(['cottyva', 'kibana', 'tier0_ea5049', 'tier0_ec19707', 'tier0_ec18068', 'rhtestuser', 'tier0_ukhalid', 'DHCPAdmin', 'dpetrella', 'ExchAdmin', 'jsiders', 'VMWareVDI', 'tier0_ec19533', 'tier0_ec14577', 'laker', 'tier0_ea3911', 'CAADmin', 'aj-admin', 'admin', 'Paul_ADM', 'nchaudhry', 'ADFSAdmin', 'manaitestuser', 'mwesterfield'])
+    logging.info("============================ IdM Users are %s  ============================", IDM_USERS)
+    logging.info("============================ AD Users are %s  ============================", AD_USERS)
+    AD_USERS.add('admin')
     TO_ADD = AD_USERS.difference(IDM_USERS)
     TO_DEL = IDM_USERS.difference(AD_USERS)
-    logging.debug("============================ Users to be deleted %s  ============================", TO_DEL)
-    logging.debug("============================ Users to be added  %s  ============================", TO_ADD)
-    delete_user('rbuzatu')
-    create_user('rbuzatu')
-    #for user in TO_ADD:
-    #    create_user(user, uid)
+    logging.info("============================ Users to be deleted %s  ============================", TO_DEL)
+    logging.info("============================ Users to be added  %s  ============================", TO_ADD)
+    #delete_user('rbuzatu')
+    #create_user('rbuzatu')
+    for idm_user in TO_ADD:
+        create_user(idm_user)
     #for user in TO_DEL:
     #    delete_user(user)
     now = datetime.now()
-    logging.debug("============================ Ran at %s ============================", now)
+    logging.info("============================ Ran at %s ============================", now)
 
 
 if __name__ == '__main__':
