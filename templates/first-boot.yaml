@@ -1,11 +1,18 @@
 heat_template_version: 2014-10-16
 
+parameters:
+  NodeRootPassword:
+    description: Root password for the nodes
+    hidden: true
+    type: string
+
 resources:
   userdata:
     type: OS::Heat::MultipartMime
     properties:
       parts:
-      - config: {get_resource: root_password}
+      - config: {get_resource: root_password_method2}
+      - config: {get_resource: root_password_method1}
 #      - config: {get_resource: wipe_disk}
 
 #  wipe_disk:
@@ -13,12 +20,26 @@ resources:
 #    properties:
 #      config: {get_file: wipe-disk.sh}
 
-  root_password:
+  root_password_method1:
     type: OS::Heat::SoftwareConfig
     properties:
       config: |
         #!/bin/bash
         echo "mypasswd" | passwd --stdin root
+
+  root_config_method2:
+    type: OS::Heat::CloudConfig
+    properties:
+      cloud_config:
+        ssh_pwauth: true
+        disable_root: false
+        chpasswd:
+          list:
+            str_replace:
+              template: "root:PASSWORD"
+              params:
+                PASSWORD: {get_param: NodeRootPassword}
+          expire: False
 
 outputs:
   OS::stack_id:
