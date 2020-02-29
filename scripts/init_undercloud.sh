@@ -39,6 +39,8 @@ openstack subnet set --dns-nameserver 8.8.8.8 <SUBNET_ID>
 
 
 openstack baremetal import --json nodes.json
+openstack overcloud node import nodes.json
+
 
 time openstack overcloud node introspect --all-manageable --provide
 #time openstack  baremetal introspection bulk start
