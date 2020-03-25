@@ -26,11 +26,12 @@ if [[ $DEPLOYMENT_RESULT -eq 0 ]] && [[ $STACK_COMPLETE -eq 0 ]]; then
     # lower DHCP timeout on image virt-customize -a CentOS-7-x86_64-GenericCloud.qcow2 --run-command 'echo -e "timeout 20;\nretry 10;" > /etc/dhcp/dhclient.conf'
     #glance image-create --name "cirros" --is-public true --disk-format qcow2 --container-format bare --progress --file $IMAGES_DIR/cirros-0.3.5-x86_64-disk.img
 
-    nova secgroup-add-rule default icmp -1 -1 0.0.0.0/0
-    nova secgroup-add-rule default tcp 22 22 0.0.0.0/0
-    nova secgroup-add-rule default tcp 80 80 0.0.0.0/0
-    nova secgroup-add-rule default tcp 443 443 0.0.0.0/0
-    nova keypair-add --pub-key /root/.ssh/id_rsa.pub mykey
+    for i in `openstack security group list -c ID -f csv | grep -v ID`; do
+        openstack security group rule create --protocol icmp $i
+        openstack security group rule create  --dst-port 1:65000 $i
+    done
+
+    openstack keypair create --public-key ~/.ssh/id_rsa.pub mykey
 
     openstack flavor create m1.small --id 1 --ram 512 --disk 9 --vcpus 1
 
@@ -46,15 +47,15 @@ if [[ $DEPLOYMENT_RESULT -eq 0 ]] && [[ $STACK_COMPLETE -eq 0 ]]; then
     neutron router-interface-add external-router private-subnet
     neutron router-gateway-set external-router public-net
 
-    net_id=`neutron net-list  | grep private |awk '{print $2}'`
-    nova boot --image centos --flavor m1.small --security-groups default --key-name mykey --nic net-id=$net_id myvm1
-    nova boot --image centos --flavor m1.small --security-groups default --key-name mykey --nic net-id=$net_id myvm2
+    netid=`openstack network list --internal -c ID -f value`
+    vmid1=`openstack server create --image centos --flavor m1.small --security-group default --key-name mykey --nic net-id=$netid vm1 -c id -f value`
+    vmid2=`openstack server create --image centos --flavor m1.small --security-group default --key-name mykey --nic net-id=$netid vm2 -c id -f value`
+    pubnetid=`openstack network list --external -c ID -f value`
+    fip1=`openstack floating ip create $pubnetid -c floating_ip_address -f value`
+    fip2=`openstack floating ip create $pubnetid -c floating_ip_address -f value`
+    openstack server add floating ip $vmid1 $fip1
+    openstack server add floating ip $vmid2 $fip2
 
-    fip1=`nova floating-ip-create public-net | grep public |awk '{print $4}'`
-    fip2=`nova floating-ip-create public-net | grep public |awk '{print $4}'`
-    sleep 20
-    nova floating-ip-associate myvm1 $fip1
-    nova floating-ip-associate myvm2 $fip2
     sleep 10
     ping -c2 $fip1
     ping -c2 $fip2
