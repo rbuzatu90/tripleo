@@ -1,6 +1,6 @@
 heat_template_version: queens
 description: >
-  Software Config to drive os-net-config to configure VLANs for the ComputeHCI role.
+  Software Config to drive os-net-config to configure VLANs for the Controller role.
 parameters:
   ControlPlaneIp:
     default: ''
@@ -61,9 +61,6 @@ parameters:
   ControlPlaneDefaultRoute: # Override this via parameter_defaults
     description: The default route of the control plane network.
     type: string
-  ManagementNetDefaultRoute:
-    description: The default route of the management
-    type: string
   ExternalInterfaceDefaultRoute:
     default: '10.0.0.1'
     description: default route for the external network
@@ -75,16 +72,10 @@ parameters:
   EC2MetadataIp: # Override this via parameter_defaults
     description: The IP address of the EC2 metadata server.
     type: string
-  BondInterfaceOvsOptions:
-    default: ''
-    description: 'The ovs_options or bonding_options string for the bond
-      interface. Set things like lacp=active and/or bond_mode=balance-slb
-      for OVS bonds or like mode=4 for Linux bonds using this option.'
-    type: string
-    constraints:
-    - allowed_pattern: ^((?!balance.tcp).)*$
-      description: 'The balance-tcp bond mode is known to cause packet loss and
-        should not be used in BondInterfaceOvsOptions.'
+  DnsSearchDomains: # Override this via parameter_defaults
+    default: []
+    description: A list of DNS search domains to be added (in order) to resolv.conf.
+    type: comma_delimited_list
 resources:
   OsNetConfigImpl:
     type: OS::Heat::SoftwareConfig
@@ -102,6 +93,8 @@ resources:
                 use_dhcp: false
                 dns_servers:
                   get_param: DnsServers
+                domain:
+                  get_param: DnsSearchDomains
                 addresses:
                 - ip_netmask:
                     list_join:
@@ -113,10 +106,13 @@ resources:
                   next_hop:
                     get_param: EC2MetadataIp
 
-
               - type: ovs_bridge
-                name: br0
+                name: br-ex
                 use_dhcp: false
+                dns_servers:
+                  get_param: DnsServers
+                domain:
+                  get_param: DnsSearchDomains
                 addresses:
                 - ip_netmask:
                     get_param: ExternalIpSubnet
@@ -124,10 +120,23 @@ resources:
                 - default: true
                   next_hop:
                     get_param: ExternalInterfaceDefaultRoute
-
-                members:              
+                members:
                 - type: interface
                   name: nic2
+                  # force the MAC address of the bridge to this interface
+                  primary: true
+                - type: vlan
+                  vlan_id:
+                    get_param: StorageNetworkVlanID
+                  addresses:
+                  - ip_netmask:
+                      get_param: StorageIpSubnet
+                - type: vlan
+                  vlan_id:
+                    get_param: StorageMgmtNetworkVlanID
+                  addresses:
+                  - ip_netmask:
+                      get_param: StorageMgmtIpSubnet
                 - type: vlan
                   vlan_id:
                     get_param: InternalApiNetworkVlanID
@@ -136,20 +145,10 @@ resources:
                       get_param: InternalApiIpSubnet
                 - type: vlan
                   vlan_id:
-                    get_param: StorageNetworkVlanID
-                  addresses:
-                  - ip_netmask:
-                      get_param: StorageIpSubnet
-
-                - type: vlan
-                  vlan_id:
                     get_param: TenantNetworkVlanID
                   addresses:
                   - ip_netmask:
                       get_param: TenantIpSubnet
-
-
-
 outputs:
   OS::stack_id:
     description: The OsNetConfigImpl resource.
