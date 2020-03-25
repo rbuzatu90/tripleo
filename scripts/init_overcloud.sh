@@ -2,10 +2,10 @@
 
 set +x
 
-BASE_DIR=/root/tripleo
+BASE_DIR=/home/stack/tripleo
 IMAGES_DIR=$BASE_DIR/../images/
-UNDERCLOUD_RC_FILE=$BASE_DIR/scripts/stackrc
-OVERCLOUD_RC_FILE=$BASE_DIR/scripts/overcloudrc.v3
+UNDERCLOUD_RC_FILE=$BASE_DIR/../stackrc
+OVERCLOUD_RC_FILE=$BASE_DIR/../overcloudrc.v3
 TOPOLOGY_FILE=$BASE_DIR/1compute3controller.yaml
 NETWORK_ISOLATION=/usr/share/openstack-tripleo-heat-templates/environments/network-isolation.yaml
 NETWORK_ENVIRONMENT=$BASE_DIR/network-environment.yaml
