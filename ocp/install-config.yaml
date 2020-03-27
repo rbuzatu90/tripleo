@@ -25,6 +25,7 @@ networking:
   networkType: OpenShiftSDN
   serviceNetwork:
   - 172.30.0.0/16
+platform:
   openstack:
     rootVolume: 30
     cloud: mylab
