@@ -23,6 +23,7 @@ parameter_defaults:
   StorageNetworkVip: 172.18.0.9
   StorageMgmtNetworkVip: 172.19.0.10
   PublicVirtualFixedIPs: [{'ip_address':'192.168.122.101'}]
+  NeutronDhcpAgentDnsmasqDnsServers: ['10.0.1.2'] # DNS running on KVM in container
 
   ExtraConfig:
     tripleo::profile::base::sshd::options:
