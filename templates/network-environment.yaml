@@ -6,8 +6,8 @@ resource_registry:
   OS::TripleO::Network::Ports::StorageVipPort: /usr/share/openstack-tripleo-heat-templates/network/ports/noop.yaml
   OS::TripleO::Network::Ports::StorageMgmtVipPort: /usr/share/openstack-tripleo-heat-templates/network/ports/noop.yaml
 
-  OS::TripleO::Controller::Net::SoftwareConfig: ./nic-config/controller.yaml
-  OS::TripleO::Compute::Net::SoftwareConfig: ./nic-config/controller.yaml
+  OS::TripleO::Controller::Net::SoftwareConfig: ./nic-config/generic.yaml
+  OS::TripleO::Compute::Net::SoftwareConfig: ./nic-config/generic.yaml
 
   #OS::TripleO::ComputeExtraConfigPre: /root/tripleo/predeploy/compute-predeploy-tasks.yaml
   #OS::TripleO::ControllerExtraConfigPre: /root/tripleo/predeploy/controller-predeploy-tasks.yaml
