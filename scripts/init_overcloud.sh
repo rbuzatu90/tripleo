@@ -32,7 +32,7 @@ if [[ $DEPLOYMENT_RESULT -eq 0 ]] && [[ $STACK_COMPLETE -eq 0 ]]; then
         openstack security group rule create  --dst-port 1:65000 $i
     done
 
-    openstack keypair create --public-key ~/.ssh/id_rsa.pub mykey
+    openstack keypair create --public-key ~/.ssh/id_ed25519.pub mykey
 
     openstack flavor create m1.small --id auto --ram 1024 --disk 30 --vcpus 2
 
