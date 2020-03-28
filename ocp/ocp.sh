@@ -6,7 +6,7 @@ openstack quota set --cores -1 --gigabytes -1 --floating-ips -1 --ram -1 openshi
 openstack role add --user admin --project admin swiftoperator
 openstack object store account set --property Temp-URL-Key=superkey
 
-openstack image create --public --container-format=bare --disk-format=qcow2 --file rhel-server-7.7-update-1-x86_64-kvm.qcow2
+openstack image create --public --container-format=bare --disk-format=qcow2 --file rhel-server-7.7-update-1-x86_64-kvm.qcow2 rhel7
 openstack image create --public --container-format=bare --disk-format=qcow2 --file rhcos-4.3.0-x86_64-openstack.qcow2 rhcos 
 
 
@@ -71,6 +71,7 @@ sudo mv oc kubectl openshift-install /usr/sbin/
 rm -f openshift-client-linux-4.3.8.tar.gz openshift-install-linux-4.3.8.tar.gz
 
 time openshift-install create cluster --dir=/home/cloud-user/ocp/ --log-level=debug
+export KUBECONFIG=/home/cloud-user/ocp/auth/kubeconfig
 
 
 
