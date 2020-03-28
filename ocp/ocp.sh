@@ -6,8 +6,8 @@ openstack quota set --cores -1 --gigabytes -1 --floating-ips -1 --ram -1 openshi
 openstack role add --user admin --project admin swiftoperator
 openstack object store account set --property Temp-URL-Key=superkey
 
-glance image-create --name "rhel7" --visibility public --disk-format qcow2 --container-format bare --progress --file $IMAGES_DIR/rhel-server-7.7-update-1-x86_64-kvm.qcow2
-openstack image create --container-format=bare --disk-format=qcow2 --file rhcos-4.3.0-x86_64-openstack.qcow2 rhcos 
+openstack image create --public --container-format=bare --disk-format=qcow2 --file rhel-server-7.7-update-1-x86_64-kvm.qcow2
+openstack image create --public --container-format=bare --disk-format=qcow2 --file rhcos-4.3.0-x86_64-openstack.qcow2 rhcos 
 
 
 for i in `openstack security group list -c ID -f csv | grep -v ID | tr -d '"'`; do
@@ -21,11 +21,12 @@ openstack flavor create m1.small --id auto --ram 1024 --disk 30 --vcpus 2
 
 neutron net-create private-net --provider:network_type vxlan
 subnet="10.0.0"
-neutron subnet-create private-net --dns-nameserver 8.8.8.8 --enable-dhcp --allocation-pool start=$subnet.60,end=$subnet.100 --gateway $subnet.1 $subnet.0/24 --name private-subnet
+neutron subnet-create private-net --dns-nameserver 10.0.1.2 --enable-dhcp --allocation-pool start=$subnet.60,end=$subnet.100 --gateway $subnet.1 $subnet.0/24 --name private-subnet
 
 neutron net-create --router:external --provider:network_type flat --provider:physical_network datacentre public-net
 subnet="192.168.122"
-neutron subnet-create public-net --dns-nameserver $subnet.5 --enable-dhcp --allocation-pool start=$subnet.160,end=$subnet.200 --gateway $subnet.1 $subnet.0/24 --name public-subnet
+neutron subnet-create public-net --dns-nameserver 10.0.1.2 --enable-dhcp --allocation-pool start=$subnet.160,end=$subnet.200 --gateway $subnet.1 $subnet.0/24 --name public-subnet
+#neutron subnet-update --dns-nameserver 172.24.16.111 --dns-nameserver 172.24.16.112 `openstack subnet list | grep ocp | grep node | awk '{print $2}'`
 
 fip1=`openstack floating ip create --floating-ip-address 192.168.122.167 public-net -c floating_ip_address -f value` # FIP for ocp admin VM
 openstack floating ip create --floating-ip-address 192.168.122.166 public-net # api
@@ -42,7 +43,6 @@ vmid1=`openstack server create --image rhel7 --flavor m1.small --security-group 
 sleep 100
 openstack server add floating ip $vmid1 $fip1
 
-#neutron subnet-update --dns-nameserver 172.24.16.111 --dns-nameserver 172.24.16.112 `openstack subnet list | grep ocp | grep node | awk '{print $2}'`
 
 
 openstack flavor create --ram 8192 --disk 50 --vcpu 8 --private --project openshift  --insecure  ocp.master.big
@@ -71,3 +71,14 @@ sudo mv oc kubectl openshift-install /usr/sbin/
 rm -f openshift-client-linux-4.3.8.tar.gz openshift-install-linux-4.3.8.tar.gz
 
 time openshift-install create cluster --dir=/home/cloud-user/ocp/ --log-level=debug
+
+
+
+
+
+
+openstack router add subnet external-router `openstack subnet list | grep ocp | grep nodes | awk '{print $2}'`
+openstack router show `openstack router list | grep ocp | grep external-router | awk '{print $2}'` -c external_gateway_info -f value | jq .external_fixed_ips[0].ip_address
+openstack router show external-router -c external_gateway_info -f value | jq .external_fixed_ips[0].ip_address
+
+ssh core@192.168.122.161 'journalctl -b -f -u bootkube.service'
