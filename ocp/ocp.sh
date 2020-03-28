@@ -43,14 +43,12 @@ vmid1=`openstack server create --image rhel7 --flavor m1.small --security-group 
 sleep 100
 openstack server add floating ip $vmid1 $fip1
 
-
-
 openstack flavor create --ram 8192 --disk 50 --vcpu 8 --private --project openshift  --insecure  ocp.master.big
 openstack flavor create --ram 8192 --disk 50 --vcpu 8 --private --project openshift  --insecure  ocp.infra.big
 openstack flavor create --ram 4096 --disk 50 --vcpu 4 --private --project openshift  --insecure  ocp.infra.small
 openstack flavor create --ram 8192 --disk 50 --vcpu 2 --private --project openshift  --insecure  ocp.worker.medium
 
-
+rsync clouds.yaml install-config.yaml cloud-user@192.168.122.167:
 # On OCP admin
 
 ssh cloud-user@192.168.122.167
@@ -81,5 +79,6 @@ export KUBECONFIG=/home/cloud-user/ocp/auth/kubeconfig
 openstack router add subnet external-router `openstack subnet list | grep ocp | grep nodes | awk '{print $2}'`
 openstack router show `openstack router list | grep ocp | grep external-router | awk '{print $2}'` -c external_gateway_info -f value | jq .external_fixed_ips[0].ip_address
 openstack router show external-router -c external_gateway_info -f value | jq .external_fixed_ips[0].ip_address
+openstack floating ip set --port `openstack port list | grep ingress-port | awk '{print $2}'` 192.168.122.177
+ssh core@`openstack server list --all | grep bootstrap | grep -o "192.168.122.[0-9]*"` 'journalctl -b -f -u bootkube.service'
 
-ssh core@192.168.122.161 'journalctl -b -f -u bootkube.service'
