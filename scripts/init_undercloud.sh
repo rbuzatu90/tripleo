@@ -14,6 +14,16 @@ ENABLE_TLS=$BASE_DIR/enable-tls.yaml
 INJECT_TRUST_ANCHOR=$BASE_DIR/inject-trust-anchor.yaml
 FIXED_IPS=$BASE_DIR/fixed-ips.yaml
 
+
+sudo subscription-manager register --username=rbuzatu@redhat.com
+pool=$(sudo subscription-manager list --available | grep -v "^ " | grep -m1 -A 5 "Employee SKU" | grep Pool | awk '{print $3}')
+sudo subscription-manager attach --pool=$pool
+sudo subscription-manager repos --disable=*
+sudo subscription-manager repos --enable=rhel-7-server-rpms --enable=rhel-7-server-extras-rpms --enable=rhel-7-server-rh-common-rpms --enable=rhel-ha-for-rhel-7-server-rpms --enable=rhel-7-server-openstack-13-rpms --enable=rhel-7-server-rhceph-3-tools-rpms
+sudo yum update -y
+sudo yum install -y python-tripleoclient vim telnet wget tcpdump nmap tmux git crudini jq net-tools yum-utils libguestfs-tools rhosp-director-images rhosp-director-images-ipa
+reboot
+
 useradd stack
 passwd stack
 echo "stack ALL=(root) NOPASSWD:ALL" | tee -a /etc/sudoers.d/stack
