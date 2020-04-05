@@ -1,4 +1,3 @@
-
 openstack project create openshift
 openstack role add --user admin --project openshift admin
 openstack quota set --cores -1 --gigabytes -1 --floating-ips -1 --ram -1 openshift
@@ -7,7 +6,7 @@ openstack role add --user admin --project admin swiftoperator
 openstack object store account set --property Temp-URL-Key=superkey
 
 openstack image create --public --container-format=bare --disk-format=qcow2 --file rhel-server-7.7-update-1-x86_64-kvm.qcow2 rhel7
-openstack image create --public --container-format=bare --disk-format=qcow2 --file rhcos-4.3.0-x86_64-openstack.qcow2 rhcos 
+openstack image create --public --container-format=bare --disk-format=qcow2 --file rhcos-4.3.0-x86_64-openstack.qcow2 rhcos
 
 
 for i in `openstack security group list -c ID -f csv | grep -v ID | tr -d '"'`; do
@@ -82,4 +81,3 @@ openstack router show `openstack router list | grep ocp | grep external-router |
 openstack router show external-router -c external_gateway_info -f value | jq .external_fixed_ips[0].ip_address
 openstack floating ip set --port `openstack port list | grep ingress-port | awk '{print $2}'` 192.168.122.177
 ssh core@`openstack server list --all | grep bootstrap | grep -o "192.168.122.[0-9]*"` 'journalctl -b -f -u bootkube.service'
-
