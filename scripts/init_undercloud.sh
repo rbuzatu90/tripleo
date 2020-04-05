@@ -14,6 +14,16 @@ ENABLE_TLS=$BASE_DIR/enable-tls.yaml
 INJECT_TRUST_ANCHOR=$BASE_DIR/inject-trust-anchor.yaml
 FIXED_IPS=$BASE_DIR/fixed-ips.yaml
 
+
+sudo subscription-manager register --username=rbuzatu@redhat.com
+pool=$(sudo subscription-manager list --available | grep -v "^ " | grep -m1 -A 5 "Employee SKU" | grep Pool | awk '{print $3}')
+sudo subscription-manager attach --pool=$pool
+sudo subscription-manager repos --disable=*
+sudo subscription-manager repos --enable=rhel-7-server-rpms --enable=rhel-7-server-extras-rpms --enable=rhel-7-server-rh-common-rpms --enable=rhel-ha-for-rhel-7-server-rpms --enable=rhel-7-server-openstack-13-rpms --enable=rhel-7-server-rhceph-3-tools-rpms
+sudo yum update -y
+sudo yum install -y python-tripleoclient rhosp-director-images rhosp-director-images-ipa vim telnet wget tcpdump nmap tmux git crudini jq bind-utils net-tools yum-utils libguestfs-tools bash-completion bash-completion-extras
+reboot
+
 useradd stack
 passwd stack
 echo "stack ALL=(root) NOPASSWD:ALL" | tee -a /etc/sudoers.d/stack
@@ -22,20 +32,19 @@ su - stack
 mkdir ~/images/
 
 source $UNDERCLOUD_RC_FILE
-yum install -y rhosp-director-images rhosp-director-images-ipa
 cd $IMAGES_DIR
-for i in /usr/share/rhosp-director-images/overcloud-full-latest-10.0.tar /usr/share/rhosp-director-images/ironic-python-agent-latest-10.0.tar; do tar -xvf $i; done
+for i in /usr/share/rhosp-director-images/overcloud-full-latest-13 /usr/share/rhosp-director-images/ironic-python-agent-latest-10.0.tar; do tar -xvf $i; done
 # Customize overcloud img
 # Set root password
 # Set alias for vim
 # Set undercloud hostname
 # Set disable_root:0 in /etc/cloud/cloud.cfg
-yum install -y libguestfs-tools.noarch
 #export LIBGUESTFS_BACKEND=direct
 #virt-customize -a overcloud-full.qcow2 --root-password password:mypasswd
 #virt-customize -a overcloud-full.qcow2 --run-command 'echo "192.168.122.10 uc.mylab.test" >> /etc/hosts; echo alias vim="vi" >> /etc/profile; alias rsync="rsync --progress" >> /etc/profile; sed -i "s/disable_root.*/disable_root: 0/" /etc/cloud/cloud.cfg; sed -i "s/#UseDNS.*/UseDNS no/" /etc/ssh/sshd_config'
+virt-customize -a overcloud-full.qcow2 --run-command "echo 'set completion-ignore-case on' >> /root/.inputrc; sed -i 's/^ssh_pwauth.*/ssh_pwauth: 1/' /etc/cloud/cloud.cfg; sed -i 's/^disable_root.*/disable_root: 0/' /etc/cloud/cloud.cfg; sed -i 's/#UseDNS.*/UseDNS no/' /etc/ssh/sshd_config; systemctl disable cloud-init;systemctl disable cloud-init-local;systemctl disable cloud-config;systemctl disable cloud-final" --root-password password:redhat --ssh-inject "root:string:ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC+aPJS2SOiakBfa5Tq1Zc1oLgM7zl9UDLqc8z0AHSlyPbp4vf09NqHUKv20JYB91aD0SS0Joz7FsXMqnwp5aNdE18NHrH+PFTCPBgsHL9sle77tdhwwj6P6JKsEYrXf+TxhmfDNcHFnaL2zNfu3CZcxGEmRtX1zi8HDiysmXEIru+dZziYM1CUdds8zkZ6IeLV6h5ASBiYv2/rcPbhZa98tgVbGyQJ0d1iSkMY0zXev6okflNx+O3Kx1HUvyPf4vh50ebQZ45gL0ZxO9vbIOPIC/8fdaUhBVZkihtpA2Afpr7wsYOSH+dMQL4WsDzd9m4Sno6mVgHBKaMb/BdIb1bH root@zion"
 openstack overcloud image upload --update-existing --image-path $IMAGES_DIR
-openstack subnet set --dns-nameserver 8.8.8.8 <SUBNET_ID>
+openstack subnet set --dns-nameserver 10.0.2.1 `openstack subnet list | grep ctlplane | awk '{print $2}'`
 
 
 openstack baremetal import --json nodes.json
