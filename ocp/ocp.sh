@@ -46,12 +46,12 @@ openstack server add floating ip $vmid1 $fip1
 openstack flavor create --ram 8192 --disk 50 --vcpu 8 --private --project openshift  --insecure  ocp.master.big
 openstack flavor create --ram 8192 --disk 50 --vcpu 8 --private --project openshift  --insecure  ocp.infra.big
 openstack flavor create --ram 4096 --disk 50 --vcpu 4 --private --project openshift  --insecure  ocp.infra.small
-openstack flavor create --ram 8192 --disk 50 --vcpu 2 --private --project openshift  --insecure  ocp.worker.medium
+openstack flavor create --ram 7192 --disk 50 --vcpu 4 --private --project openshift  --insecure  ocp.worker.medium
 
 rsync clouds.yaml install-config.yaml cloud-user@192.168.122.167:
 # On OCP admin
 
-ssh cloud-user@192.168.122.167
+ssh cloud-user@192.168.122.167:/ocp/
 sudo subscription-manager register --username=rbuzatu@redhat.com
 pool=$(sudo subscription-manager list --available | grep -v "^ " | grep -m1 -A 5 "Employee SKU" | grep Pool | awk '{print $3}')
 sudo subscription-manager attach --pool=$pool
@@ -59,14 +59,15 @@ sudo subscription-manager repos --disable=*
 sudo subscription-manager repos --enable=rhel-7-server-rpms --enable=rhel-7-server-extras-rpms --enable=rhel-7-server-rh-common-rpms --enable=rhel-7-server-satellite-tools-6.4-rpms --enable=rhel-7-server-optional-rpms
 sudo yum install -y vim telnet wget tcpdump nmap tmux git crudini jq net-tools yum-utils
 sudo yum update -y
-sudo wget -c 'https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-install-linux-4.3.8.tar.gz' 'https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux-4.3.8.tar.gz'
+sudo wget -c 'https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-install-linux.tar.gz' 'https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux.tar.gz'
 sudo reboot
 # get clouds.yaml and install-config.yaml
 
-tar -xvzf openshift-client-linux-4.3.8.tar.gz
-tar -xvzf openshift-install-linux-4.3.8.tar.gz
+tar -xvzf openshift-client-linux.tar.gz
+tar -xvzf openshift-install-linux.tar.gz
 sudo mv oc kubectl openshift-install /usr/sbin/
 rm -f openshift-client-linux-4.3.8.tar.gz openshift-install-linux-4.3.8.tar.gz
+# set ssh key and project details in clouds.yaml
 
 time openshift-install create cluster --dir=/home/cloud-user/ocp/ --log-level=debug
 export KUBECONFIG=/home/cloud-user/ocp/auth/kubeconfig
