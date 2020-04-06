@@ -33,7 +33,7 @@ mkdir ~/images/
 
 source $UNDERCLOUD_RC_FILE
 cd $IMAGES_DIR
-for i in /usr/share/rhosp-director-images/overcloud-full-latest-13 /usr/share/rhosp-director-images/ironic-python-agent-latest-10.0.tar; do tar -xvf $i; done
+for i in /usr/share/rhosp-director-images/overcloud-full-latest.tar /usr/share/rhosp-director-images/ironic-python-agent-latest.tar; do tar -xvf $i; done
 # Customize overcloud img
 # Set root password
 # Set alias for vim
