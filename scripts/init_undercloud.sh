@@ -25,9 +25,13 @@ sudo yum install -y python-tripleoclient rhosp-director-images rhosp-director-im
 reboot
 
 useradd stack
-passwd stack
 echo "stack ALL=(root) NOPASSWD:ALL" | tee -a /etc/sudoers.d/stack
 chmod 0440 /etc/sudoers.d/stack
+passwd stack
+mkdir /home/stack/.ssh
+cp /root/.ssh/authorized_keys /home/stack/.ssh/authorized_keys
+chown stack:stack /home/stack/.ssh/authorized_keys
+chmod 400 /home/stack/.ssh/authorized_keys
 su - stack
 mkdir ~/images/
 
