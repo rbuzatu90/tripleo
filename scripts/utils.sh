@@ -6,6 +6,10 @@ for i in `ironic node-list | grep "None\|True" | awk '{print $2}'`; do ironic no
 nova list | grep Running | awk '{print $4, $12}' | sed 's/ctlplane=//g' | awk -F '-' '{print $7}'
 for i in `nova list | grep ERROR | awk '{print $2}'`; do nova reset-state $i --active; nova stop $i; nova start $i;done # recover from failed migration evacuation
 
+PASS=`grep "stats auth admin:" /var/lib/config-data/puppet-generated/haproxy/etc/haproxy/haproxy.cfg | awk -F\: '{print $2}'`
+IPADDR=`grep ":1993" /var/lib/config-data/puppet-generated/haproxy/etc/haproxy/haproxy.cfg | grep -o "[0-9.]*" | head -1`
+curl -s -u admin:$PASS "http://$IPADDR:1993/;csv" | egrep -vi "(frontend|backend)" | awk -F',' '{ print $1" "$2" "$18 }'
+
 #crudini --set ~/undercloud.conf DEFAULT rpc_response_timeout 600
 
 upload-swift-artifacts -f my_scripts.tgz --environment deploy_artifacts.yaml
