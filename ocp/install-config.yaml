@@ -1,0 +1,39 @@
+# install-config.yaml
+apiVersion: v1
+baseDomain: mylab.test
+compute:
+- hyperthreading: Enabled
+  name: worker
+  platform:
+    openstack:
+      type: "ocp.worker.medium"
+  replicas: 3
+controlPlane:
+  hyperthreading: Enabled
+  name: master
+  platform: {}
+  replicas: 3
+metadata:
+  creationTimestamp: null
+  name: ocp
+networking:
+  clusterNetwork:
+  - cidr: 10.128.0.0/14
+    hostPrefix: 23
+  machineCIDR: 192.169.0.0/16
+  externalDNS: 172.24.16.111
+  networkType: OpenShiftSDN
+  serviceNetwork:
+  - 172.30.0.0/16
+platform:
+  openstack:
+    rootVolume: 30
+    cloud: mylab
+    computeFlavor: "ocp.master.big"
+    externalNetwork: "public-net"
+    lbFloatingIP:  192.168.122.166
+    octaviaSupport: "1"
+    region: "regionOne"
+    trunkSupport: "1"
+pullSecret: ''
+sshKey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC+aPJS2SOiakBfa5Tq1Zc1oLgM7zl9UDLqc8z0AHSlyPbp4vf09NqHUKv20JYB91aD0SS0Joz7FsXMqnwp5aNdE18NHrH+PFTCPBgsHL9sle77tdhwwj6P6JKsEYrXf+TxhmfDNcHFnaL2zNfu3CZcxGEmRtX1zi8HDiysmXEIru+dZziYM1CUdds8zkZ6IeLV6h5ASBiYv2/rcPbhZa98tgVbGyQJ0d1iSkMY0zXev6okflNx+O3Kx1HUvyPf4vh50ebQZ45gL0ZxO9vbIOPIC/8fdaUhBVZkihtpA2Afpr7wsYOSH+dMQL4WsDzd9m4Sno6mVgHBKaMb/BdIb1bH root@zion

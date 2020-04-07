@@ -102,12 +102,20 @@ neutron port-update --no-security-groups <port id>
 neutron port-update  --port-security-enabled=False <port id>
 
 qemu-system-x86_64 --kernel overcloud-full.vmlinuz --initrd overcloud-full.initrd -m 1024 --append root=/dev/sda --enable-kvm overcloud-full.qcow2
-export LIBGUESTFS_BACKEND=direct
-virt-customize -a overcloud-full.qcow2 --root-password password:test
-virt-customize -a overcloud-full.qcow2 --install opendaylight
-virt-customize -a overcloud-full.qcow2 --upload local_file:remote_file
-virt-customize -a overcloud-full.qcow2 --run-command 'echo lol > /root/hello'
 
- /usr/libexec/qemu-kvm  -m 1024  --enable-kvm --drive file=G3R1-disk1.qcow2 --drive file=G3R1-disk2.qcow2 -vnc :4
+export LIBGUESTFS_BACKEND=direct
+virt-customize -a $NAME --upload local_file:remote_file
+virt-customize -a $NAME --sm-credentials 'USERNAME:password:PASSWORD' --sm-register --sm-attach auto --run-command "subscription-manager repos --enable=rhel-7-server-rpms --enable=rhel-7-server-extras-rpms --enable=rhel-7-server-rh-common-rpms --enable=rhel-7-server-satellite-tools-6.4-rpms --enable=rhel-7-server-optional-rpms" --update --install vim,telnet,wget,tcpdump,nmap,tmux,git,crudini,jq,iproute2,ping-netutils,ping-iputils,openssh-client,openssh-server,rsync,net-tools,bind-utils
+
+virt-customize -a $NAME --root-password password:redhat --run-command "echo 'set completion-ignore-case on' >> /root/.inputrc; sed -i 's/^ssh_pwauth.*/ssh_pwauth: 1/' /etc/cloud/cloud.cfg; sed -i 's/^disable_root.*/disable_root: 0/' /etc/cloud/cloud.cfg; sed -i 's/#UseDNS.*/UseDNS no/' /etc/ssh/sshd_config" --ssh-inject "root:string:ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC+aPJS2SOiakBfa5Tq1Zc1oLgM7zl9UDLqc8z0AHSlyPbp4vf09NqHUKv20JYB91aD0SS0Joz7FsXMqnwp5aNdE18NHrH+PFTCPBgsHL9sle77tdhwwj6P6JKsEYrXf+TxhmfDNcHFnaL2zNfu3CZcxGEmRtX1zi8HDiysmXEIru+dZziYM1CUdds8zkZ6IeLV6h5ASBiYv2/rcPbhZa98tgVbGyQJ0d1iSkMY0zXev6okflNx+O3Kx1HUvyPf4vh50ebQZ45gL0ZxO9vbIOPIC/8fdaUhBVZkihtpA2Afpr7wsYOSH+dMQL4WsDzd9m4Sno6mVgHBKaMb/BdIb1bH root@zion" --ssh-inject "root:string:ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHBTJDwYrPCeDBrM9bVNSlTVBibWGNdd22+H9NjAP5Bl rbuzatu" --selinux-relabel
+
+# For KVM machines, no need for cloud init
+virt-customize -a $NAME --run-command 'systemctl disable cloud-init;systemctl disable cloud-init-local;systemctl disable cloud-config;systemctl disable cloud-final'
+
+virt-filesystems --long -h --all -a $NAME
+
+/usr/libexec/qemu-kvm  -m 1024  --enable-kvm --drive file=$NAME,format=qcow2,if=none,id=drive-virtio-disk0,cache=none,aio=native -vnc :4 -boot menu=on,strict=on -device virtio-blk-pci,scsi=off,bus=pci.0,addr=0x6,drive=drive-virtio-disk0,id=virtio-disk0,bootindex=2
+ip tuntap add dev tap0 mode tap; ifconfig tap0 up; brctl addif virbr0 tap0
+/usr/libexec/qemu-kvm --kernel overcloud-full.vmlinuz --initrd overcloud-full.initrd -m 1024 --append root=/dev/sda --enable-kvm overcloud-full.qcow2 -net nic,vlan=0,model=virtio,macaddr=00:16:35:AF:94:4B -net tap,vlan=0,ifname=tap0,script=no,downscript=no
 
 /tmp/guestfish

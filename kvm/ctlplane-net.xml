@@ -1,0 +1,7 @@
+<network>
+  <name>ctlplane</name>
+  <uuid>bd071956-3e1e-4ce7-81cc-d9f65460e1c2</uuid>
+  <bridge name='virbr1' stp='on' delay='0'/>
+  <mac address='52:54:00:e4:7d:c8'/>
+  <ip address='192.168.122.1' netmask='255.255.255.0'/>
+</network>

@@ -1,9 +1,4 @@
 resource_registry:
-  #OS::TripleO::BlockStorage::Net::SoftwareConfig: ./nic-config/cinder-storage.yaml
-  OS::TripleO::Compute::Net::SoftwareConfig: ./nic-config/compute.yaml
-  OS::TripleO::Controller::Net::SoftwareConfig: ./nic-config/controller.yaml
-  #OS::TripleO::ObjectStorage::Net::SoftwareConfig: ./nic-config/swift-storage.yaml
-  #OS::TripleO::CephStorage::Net::SoftwareConfig: ./nic-config/ceph-storage.yaml
 
   OS::TripleO::Network::Ports::NetVipMap: /usr/share/openstack-tripleo-heat-templates/network/ports/net_vip_map_external.yaml
   OS::TripleO::Network::Ports::ExternalVipPort: /usr/share/openstack-tripleo-heat-templates/network/ports/noop.yaml
@@ -11,20 +6,24 @@ resource_registry:
   OS::TripleO::Network::Ports::StorageVipPort: /usr/share/openstack-tripleo-heat-templates/network/ports/noop.yaml
   OS::TripleO::Network::Ports::StorageMgmtVipPort: /usr/share/openstack-tripleo-heat-templates/network/ports/noop.yaml
 
+  OS::TripleO::Controller::Net::SoftwareConfig: ./nic-config/generic.yaml
+  OS::TripleO::Compute::Net::SoftwareConfig: ./nic-config/generic.yaml
+
   #OS::TripleO::ComputeExtraConfigPre: /root/tripleo/predeploy/compute-predeploy-tasks.yaml
   #OS::TripleO::ControllerExtraConfigPre: /root/tripleo/predeploy/controller-predeploy-tasks.yaml
   #OS::TripleO::NodeExtraConfigPost: /root/tripleo/postdeploy/simple.yaml
   #OS::TripleO::NodeExtraConfigPost: /root/tripleo/postdeploy/postdeploy-tasks.yaml
 
 parameter_defaults:
-  NetworkDeploymentActions: ['CREATE','UPDATE'] # Force os-net-config to execute with the latest network JSON
+  #NetworkDeploymentActions: ['CREATE','UPDATE'] # Force os-net-config to execute with the latest network JSON
   GlanceBackend: swift
   ExternalNetworkVip: 192.168.122.101
   InternalApiNetworkVip: 172.16.0.9
-  ControlPlaneIP: 192.168.2.25
+  ControlPlaneIP: 10.0.1.50
   StorageNetworkVip: 172.18.0.9
   StorageMgmtNetworkVip: 172.19.0.10
   PublicVirtualFixedIPs: [{'ip_address':'192.168.122.101'}]
+  NeutronDhcpAgentDnsmasqDnsServers: ['10.0.1.2'] # DNS running on KVM in container
 
   ExtraConfig:
     tripleo::profile::base::sshd::options:
@@ -72,12 +71,12 @@ parameter_defaults:
   # Set to the router gateway on the external network
   ExternalInterfaceDefaultRoute: 192.168.122.1
   # Gateway router for the provisioning network (or Undercloud IP)
-  ControlPlaneDefaultRoute: 192.168.2.1
+  ControlPlaneDefaultRoute: 10.0.1.1
   # The IP address of the EC2 metadata server. Generally the IP of the Undercloud
-  EC2MetadataIp: 192.168.2.1
+  EC2MetadataIp: 10.0.1.1
   # Define the DNS servers (maximum 2) for the overcloud nodes
   #
-  DnsServers: ["192.168.122.10"]
+  DnsServers: ["8.8.8.8"]
   NtpServer: pool.ntp.org
   TimeZone: 'Asia/Dubai'
   CloudName: overcloud.mylab.test
@@ -87,7 +86,7 @@ parameter_defaults:
   StorageMgmtNetworkVlanID: 203
   TenantNetworkVlanID: 204
   ManagementNetworkVlanID: 205
-  ExternalNetworkVlanID: 206
+  #ExternalNetworkVlanID: 206
   # Set to "br-ex" if using floating IPs on native VLAN on bridge br-ex
   NeutronExternalNetworkBridge: "br-ex"
   # Customize bonding options if require
