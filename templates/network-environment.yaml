@@ -19,11 +19,11 @@ parameter_defaults:
   GlanceBackend: swift
   ExternalNetworkVip: 192.168.122.101
   InternalApiNetworkVip: 172.16.0.9
-  ControlPlaneIP: 10.0.1.50
+  ControlPlaneIP: 192.168.122.2
   StorageNetworkVip: 172.18.0.9
   StorageMgmtNetworkVip: 172.19.0.10
   PublicVirtualFixedIPs: [{'ip_address':'192.168.122.101'}]
-  NeutronDhcpAgentDnsmasqDnsServers: ['10.0.1.2'] # DNS running on KVM in container
+  NeutronDhcpAgentDnsmasqDnsServers: ['192.168.122.1'] # DNS running on KVM in container
 
   ExtraConfig:
     tripleo::profile::base::sshd::options:
@@ -59,7 +59,7 @@ parameter_defaults:
   StorageNetCidr: 172.18.0.0/24
   StorageMgmtNetCidr: 172.19.0.0/24
   ManagementNetCidr: 172.20.0.0/24
-  ExternalNetCidr: 192.168.122.0/24
+  ExternalNetCidr: 192.168.123.0/24
 
   InternalApiAllocationPools: [{'start': '172.16.0.10', 'end': '172.16.0.200'}]
   TenantAllocationPools: [{'start': '172.17.0.10', 'end': '172.17.0.200'}]
@@ -67,13 +67,13 @@ parameter_defaults:
   StorageMgmtAllocationPools: [{'start': '172.19.0.10', 'end': '172.19.0.200'}]
   ManagementAllocationPools: [{'start': '172.20.0.10', 'end': '172.20.0.200'}]
   # Leave room for floating IPs in the External allocation pool
-  ExternalAllocationPools: [{'start': '192.168.122.200', 'end': '192.168.122.240'}]
+  ExternalAllocationPools: [{'start': '192.168.123.200', 'end': '192.168.123.240'}]
   # Set to the router gateway on the external network
-  ExternalInterfaceDefaultRoute: 192.168.122.1
+  ExternalInterfaceDefaultRoute: 192.168.123.1
   # Gateway router for the provisioning network (or Undercloud IP)
-  ControlPlaneDefaultRoute: 10.0.1.1
+  ControlPlaneDefaultRoute: 192.168.122.2
   # The IP address of the EC2 metadata server. Generally the IP of the Undercloud
-  EC2MetadataIp: 10.0.1.1
+  EC2MetadataIp: 192.168.122.2
   # Define the DNS servers (maximum 2) for the overcloud nodes
   #
   DnsServers: ["8.8.8.8"]
