@@ -10,7 +10,13 @@ PASS=`grep "stats auth admin:" /var/lib/config-data/puppet-generated/haproxy/etc
 IPADDR=`grep ":1993" /var/lib/config-data/puppet-generated/haproxy/etc/haproxy/haproxy.cfg | grep -o "[0-9.]*" | head -1`
 curl -s -u admin:$PASS "http://$IPADDR:1993/;csv" | egrep -vi "(frontend|backend)" | awk -F',' '{ print $1" "$2" "$18 }'
 
+password=`crudini --get /var/lib/config-data/puppet-generated/nova_libvirt/etc/nova/nova.conf database connection | grep -o 'nova:[a-zA-Z0-9]*' | cut -d: -f2`
+mysql -u nova -p -h $IPADDR -nNE -e "show variables like 'hostname';"
+
 #crudini --set ~/undercloud.conf DEFAULT rpc_response_timeout 600
+
+openstack baremetal node set --driver-info "ipmi_address=10.106.160.39" ctrl0 # Set IPMI address info
+openstack baremetal node set --property capabilities='profile:compute,boot_option:local' cmpt0 # Set capabilities / profile
 
 upload-swift-artifacts -f my_scripts.tgz --environment deploy_artifacts.yaml
 rally verify start --pattern tempest.api.compute.admin
