@@ -14,41 +14,15 @@
       "pm_password": "redhat12"
     },
     {
-      "name": "ctrl1",
-      "capabilities": "profile:control,boot_option:local",
-      "arch":"x86_64",
-      "pm_type": "pxe_ipmitool",
-      "pm_user": "admin",
-      "pm_addr": "192.168.122.1",
-      "pm_port": "11111",
-      "mac": [
-        "52:54:00:3c:31:91"
-      ],
-      "pm_password": "redhat12"
-    },
-    {
-      "name": "ctrl2",
-      "capabilities": "profile:control,boot_option:local",
-      "arch":"x86_64",
-      "pm_type": "pxe_ipmitool",
-      "pm_user": "admin",
-      "pm_addr": "192.168.122.1",
-      "pm_port": "11112",
-      "mac": [
-        "52:54:00:3c:31:92"
-      ],
-      "pm_password": "redhat12"
-    },
-    {
       "name": "cmpt0",
       "capabilities": "profile:compute,boot_option:local",
       "arch":"x86_64",
       "pm_type": "pxe_ipmitool",
       "pm_user": "admin",
-      "pm_addr": "192.168.122.1",
-      "pm_port": "11113",
+      "pm_addr": "10.10.1.180",
+      "pm_port": "11111",
       "mac": [
-        "52:54:00:3c:31:93"
+        "52:54:00:19:54:92"
       ],
       "pm_password": "redhat12"
     },
@@ -59,24 +33,11 @@
       "pm_type": "ipmi",
       "pm_user": "admin",
       "pm_addr": "192.168.122.1",
-      "pm_port": "11114",
+      "pm_port": "11113",
       "mac": [
         "52:54:00:19:54:94"
       ],
-      "pm_password": "redhat12"
-    },
-    {
-      "name": "cmpt2",
-      "capabilities": "profile:compute,boot_option:local",
-      "arch":"x86_64",
-      "pm_type": "ipmi",
-      "pm_user": "admin",
-      "pm_addr": "192.168.122.1",
-      "pm_port": "11115",
-      "mac": [
-        "52:54:00:19:54:95"
-      ],
-      "pm_password": "redhat12"
+     "pm_password": "redhat12"
     }
   ]
 }

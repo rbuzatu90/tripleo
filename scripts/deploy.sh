@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BASE_DIR=/root/tripleo
+BASE_DIR=/home/stack/tripleo
 TEMPLATE_DIR=$BASE_DIR/templates
 IMAGES_DIR=$BASE_DIR/../images/
 UNDERCLOUD_RC_FILE=$BASE_DIR/stackrc
@@ -20,26 +20,22 @@ FIXED_IPS=$TEMPLATE_DIR/fixed-ips.yaml
 ARTIFACTS=$TEMPLATE_DIR/deploy_artifacts.yaml
 
 # Log cleaning 
-rm -rf /var/log/nova/*
-rm -rf /var/log/neutron/*
-rm -rf /var/log/ironic/*
-rm -rf /var/log/mistral/*
-rm -rf /var/log/ceilometer/*
-rm -rf /var/log/glance/*
-rm -rf /var/log/heat/*
-rm -rf /var/log/httpd/*
-rm -rf /var/log/rabbit/*
-rm -rf /var/log/swift/*
-rm -rf /var/log/ironic-inspector/*
+sudo rm -rf /var/log/nova/*
+sudo rm -rf /var/log/neutron/*
+sudo rm -rf /var/log/ironic/*
+sudo rm -rf /var/log/mistral/*
+sudo rm -rf /var/log/ceilometer/*
+sudo rm -rf /var/log/glance/*
+sudo rm -rf /var/log/heat/*
+sudo rm -rf /var/log/httpd/*
+sudo rm -rf /var/log/rabbit/*
+sudo rm -rf /var/log/swift/*
+sudo rm -rf /var/log/ironic-inspector/*
 
-source $UNDERCLOUD_RC_FILE
 # Deploy
 time openstack overcloud deploy --templates \
     -e $TOPOLOGY_FILE \
     -e $NETWORK_ISOLATION \
-    -e $INJECT_TRUST_ANCHOR \
-    -e $ENABLE_TLS \
-    -e $TLS_ENDPOINTS \
     -e $NETWORK_ENVIRONMENT \
    --verbose
 
@@ -53,7 +49,7 @@ time openstack overcloud deploy --templates \
 #    -e $TLS_ENDPOINTS \
 
 export DEPLOYMENT_RESULT=$?
-yes | cp /etc/hosts.base /etc/hosts; source $UNDERCLOUD_RC_FILE; nova list --fields name,networks | grep ctlplane | awk '{print $6, $4}' | sed  's/ctlplane=//g' >> /etc/hosts
+#yes | cp /etc/hosts.base /etc/hosts; source $UNDERCLOUD_RC_FILE; nova list --fields name,networks | grep ctlplane | awk '{print $6, $4}' | sed  's/ctlplane=//g' >> /etc/hosts
 echo 'export PYTHONWARNINGS="ignore:Certificate has no, ignore:A true SSLContext object is not available, ignore:Certificate for"' >> overcloudrc.v3
 echo "Deployment exited with $DEPLOYMENT_RESULT"
 if [[ $DEPLOYMENT_RESULT -ne 0 ]]; then
