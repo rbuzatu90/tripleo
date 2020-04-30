@@ -17,6 +17,7 @@ ENV_RHEL_REG=$TEMPLATE_DIR/extraconfig/pre_deploy/rhel-registration/environment-
 #RHEL_REG_RESOURCE_REG=/usr/share/openstack-tripleo-heat-templates/extraconfig/pre_deploy/rhel-registration/rhel-registration-resource-registry.yaml
 RHEL_REG_RESOURCE_REG=$TEMPLATE_DIR/extraconfig/pre_deploy/rhel-registration/rhel-registration-resource-registry.yaml
 FIXED_IPS=$TEMPLATE_DIR/fixed-ips.yaml
+ROLES_DATA=$TEMPLATE_DIR/roles_data.yaml
 ARTIFACTS=$TEMPLATE_DIR/deploy_artifacts.yaml
 
 # Log cleaning 
@@ -34,6 +35,7 @@ sudo rm -rf /var/log/ironic-inspector/*
 
 # Deploy
 time openstack overcloud deploy --templates \
+    -r $ROLES_DATA \
     -e $TOPOLOGY_FILE \
     -e $NETWORK_ISOLATION \
     -e $NETWORK_ENVIRONMENT \
