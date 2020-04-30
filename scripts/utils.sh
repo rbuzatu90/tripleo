@@ -3,6 +3,7 @@ for i in `nova list | grep -v 'Status\|\+' | awk '{print $2}'`; do nova delete $
 for i in `nova list | grep ACTIVE | awk '{print $12}' | grep -o "[0-9.]*"`;do ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null heat-admin@$i ls;done
 for i in `nova list | grep ACTIVE | awk '{print $12}' | grep -o "[0-9.]*"`;do rsync --rsync-path="sudo rsync" ../.ssh/id_rsa $i:/root/.ssh/;done
 for i in `ironic node-list | grep "None\|True" | awk '{print $2}'`; do ironic node-set-power-state $i on ; ironic node-set-maintenance $i off ;done
+for i in `openstack baremetal node list -c Name -f value | grep stor` ; do openstack baremetal node manage $i; openstack baremetal node clean $i --clean-steps '[{"interface": "deploy", "step": "erase_devices_metadata"}]';done # ironic ceph node clean 
 nova list | grep Running | awk '{print $4, $12}' | sed 's/ctlplane=//g' | awk -F '-' '{print $7}'
 for i in `nova list | grep ERROR | awk '{print $2}'`; do nova reset-state $i --active; nova stop $i; nova start $i;done # recover from failed migration evacuation
 
