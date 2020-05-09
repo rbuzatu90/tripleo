@@ -3,9 +3,12 @@ for i in `nova list | grep -v 'Status\|\+' | awk '{print $2}'`; do nova delete $
 for i in `nova list | grep ACTIVE | awk '{print $12}' | grep -o "[0-9.]*"`;do ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null heat-admin@$i ls;done
 for i in `nova list | grep ACTIVE | awk '{print $12}' | grep -o "[0-9.]*"`;do rsync --rsync-path="sudo rsync" ../.ssh/id_rsa $i:/root/.ssh/;done
 for i in `ironic node-list | grep "None\|True" | awk '{print $2}'`; do ironic node-set-power-state $i on ; ironic node-set-maintenance $i off ;done
-for i in `openstack baremetal node list -c Name -f value | grep stor` ; do openstack baremetal node manage $i; openstack baremetal node clean $i --clean-steps '[{"interface": "deploy", "step": "erase_devices_metadata"}]';done # ironic ceph node clean 
+CEPH_NAME=stor; for i in `openstack baremetal node list -c Name -f value | grep $CEPH_NAME` ; do openstack baremetal node manage $i; openstack baremetal node clean $i --clean-steps '[{"interface": "deploy", "step": "erase_devices_metadata"}]';done # ironic ceph node clean 
+for i in `openstack baremetal node list | grep manageable | awk '{print $2}'`; do openstack baremetal node provide $i;done # ironic baremetall manage to provide 
+CTRL_NAME=ctrl; for i in `openstack baremetal node list -c Name -f value | grep -i $CTRL_NAME`; do openstack baremetal node show $i -c driver_info -f json | jq .driver_info; done # show driver / ipmi info
 nova list | grep Running | awk '{print $4, $12}' | sed 's/ctlplane=//g' | awk -F '-' '{print $7}'
 for i in `nova list | grep ERROR | awk '{print $2}'`; do nova reset-state $i --active; nova stop $i; nova start $i;done # recover from failed migration evacuation
+openstack server list -c Name -c Networks  -f value | sed 's/ctlplane=//g' | while IFS=' ' read host ip ; do ./update-hosts.sh $ip $host ; done # update /etc/hosts overcloud
 
 PASS=`grep "stats auth admin:" /var/lib/config-data/puppet-generated/haproxy/etc/haproxy/haproxy.cfg | awk -F\: '{print $2}'`
 IPADDR=`grep ":1993" /var/lib/config-data/puppet-generated/haproxy/etc/haproxy/haproxy.cfg | grep -o "[0-9.]*" | head -1`
