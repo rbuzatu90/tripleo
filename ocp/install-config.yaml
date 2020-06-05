@@ -21,7 +21,7 @@ networking:
   - cidr: 10.128.0.0/14
     hostPrefix: 23
   machineCIDR: 192.169.0.0/16
-  externalDNS: 172.24.16.111
+  externalDNS: 172.21.0.1
   networkType: OpenShiftSDN
   serviceNetwork:
   - 172.30.0.0/16
@@ -31,7 +31,7 @@ platform:
     cloud: mylab
     computeFlavor: "ocp.master.big"
     externalNetwork: "public-net"
-    lbFloatingIP:  192.168.122.166
+    lbFloatingIP:  172.21.0.166
     octaviaSupport: "1"
     region: "regionOne"
     trunkSupport: "1"
