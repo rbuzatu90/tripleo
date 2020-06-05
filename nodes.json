@@ -6,7 +6,7 @@
       "arch":"x86_64",
       "pm_type": "pxe_ipmitool",
       "pm_user": "admin",
-      "pm_addr": "192.168.122.1",
+      "pm_addr": "10.0.1.2",
       "pm_port": "11110",
       "mac": [
         "52:54:00:3c:31:90"
@@ -19,7 +19,7 @@
       "arch":"x86_64",
       "pm_type": "pxe_ipmitool",
       "pm_user": "admin",
-      "pm_addr": "10.10.1.180",
+      "pm_addr": "10.0.1.3",
       "pm_port": "11111",
       "mac": [
         "52:54:00:19:54:92"
@@ -32,10 +32,23 @@
       "arch":"x86_64",
       "pm_type": "ipmi",
       "pm_user": "admin",
-      "pm_addr": "192.168.122.1",
+      "pm_addr": "10.0.1.2",
       "pm_port": "11113",
       "mac": [
         "52:54:00:19:54:94"
+      ],
+     "pm_password": "redhat12"
+    },
+    {
+      "name": "test",
+      "capabilities": "profile:computelol,boot_option:local",
+      "arch":"x86_64",
+      "pm_type": "ipmi",
+      "pm_user": "admin",
+      "pm_addr": "10.0.1.2",
+      "pm_port": "11114",
+      "mac": [
+        "52:54:00:00:00:13"
       ],
      "pm_password": "redhat12"
     }
