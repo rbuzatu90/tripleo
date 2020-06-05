@@ -107,7 +107,7 @@ resources:
                     get_param: EC2MetadataIp
                 - default: true
                   next_hop:
-                    get_param: ExternalInterfaceDefaultRoute
+                    get_param: ControlPlaneDefaultRoute
                 members:
                 - type: interface
                   name: nic1
