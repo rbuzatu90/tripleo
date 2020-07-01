@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import re 
 
 # Get all nodes NIC MACs
