@@ -2,8 +2,11 @@
 import re 
 
 # Get all nodes NIC MACs
-#for i in {68..86}; do echo 10.237.53.$i >> nodes.txt ; sshpass -p 'calvin' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@10.237.53.$i 'hwinventory nic' >> nodes.txt ;done
-filename = 'nodes.txt'
+#for i in {68..86}; do echo 10.237.53.$i >> nodes.txt ; sshpass -p 'calvin' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@10.237.53.$i 'hwinventory nic' >> nodes ;done
+filename = 'nodes'
+if not os.path.isfile(filename):
+    print "nodes file not found"
+    exit(1)
 try:
     with open(filename, 'r') as f:
         lines = f.readlines()
