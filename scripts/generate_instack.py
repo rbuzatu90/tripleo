@@ -27,46 +27,24 @@ except IOError as e:
 instackenv = {}
 instackenv['nodes'] = []
 
-controler_naming_pattern="controller,control,ctrl,cntrl"
-compute_naming_pattern="cmpt,compute"
 # Example of input file
-# 14:9e:cf:45:b8:bb 10.171.54.207 root password1 controller1
-# 14:9e:cf:45:b8:bb 10.171.54.217 root password1 cntrl3
-# 14:9e:cf:45:b8:bb 10.171.54.1 root password1 cmpt1
-# 14:9e:cf:45:b8:bb 10.171.54.2 root password1 compute2
+# 3C:FD:FE:D3:DF:E0 10.237.53.68 rk1-com1 compute-zone1-0
+# 3C:FD:FE:E9:41:90 10.237.53.69 rk1-com2 compute-zone1-1
 try:
   for line in lines:
     elt = line.strip().split(delimiter)
     tmp = {}
+    tmp['pm_user'] = 'root'
+    tmp['pm_type'] = 'ipmi'
+    tmp['pm_password'] = 'calvin'
     tmp['mac'] = []
     tmp['mac'].append(elt[0])
-    tmp['name'] = elt[4]
-    tmp['pm_user'] = elt[2]
-    tmp['pm_password'] = elt[3]
+    tmp['name'] = elt[2]
     tmp['pm_addr'] = elt[1]
-    if "cmpt" in elt[4] or "compute" in elt[4]:
-      tmp['pm_type'] = driver
-      tmp['capabilities'] = "profile:" + elt[4] + ",boot_option:local"
-    elif "ctrl" in elt[4] or "control" in elt[4] or "cntrl" in elt[4] or "controller" in elt[4]:
-      tmp['pm_type'] = driver
-      tmp['capabilities'] = "profile:" + elt[4] + ",boot_option:local"
-    if "contrail" in elt[4]:
-      tmp['pm_type'] = 'pxe_ssh'
-      if "analytics" in elt[4] and "database" not in elt[4]:
-        tmp['capabilities'] = "profile:" + elt[4] + ",boot_option:local"
-      if "control" in elt[4]:
-        tmp['capabilities'] = "profile:" + elt[4] + ",boot_option:local"
-      if "databese" in elt[4] or "db" in elt[4]:
-        tmp['capabilities'] = "profile:" + elt[4] + ",boot_option:local"
-        if "control" in elt[4]:
-          tmp['capabilities'] = "profile:" + elt[4] + ",boot_option:local"
+    tmp['capabilities'] = "boot_option:local," + "node:" + elt[3]
     instackenv['nodes'].append(tmp)
 except IndexError as e:
     print "Error creating dict: %s" % (e)
     exit(1)
 
-jsonarray = json.dumps(instackenv)
-
-print jsonarray
-with open('data.txt', 'w') as outfile:
-    json.dump(instackenv,outfile,indent=2)
+print(json.dumps(instackenv,indent=2))
