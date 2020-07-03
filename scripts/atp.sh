@@ -11,6 +11,7 @@ CTRL_NAME=ctrl1; NODE=$(openstack server list --name $CTRL_NAME -f value -c Netw
 for NODE in $(openstack server list --name controller -f value -c Networks | cut -d= -f2); do echo "=== $NODE ===" ; ssh heat-admin@$NODE "sudo docker exec clustercheck clustercheck" ; done # check overcloud database replication health
 
 for NODE in $(openstack server list --name controller -f value -c Networks | cut -d= -f2); do echo "=== $NODE ===" ; ssh heat-admin@$NODE "sudo docker exec $(ssh heat-admin@$NODE "sudo docker ps -f 'name=.*rabbitmq.*' -q") rabbitmqctl node_health_check" ; done # check RabbitMQ cluster health
+ssh heat-admin@$NODE 'dockerid=$(sudo docker ps -f "name=.*rabbitmq.*" -q); sudo docker exec $dockerid rabbitmqctl status; echo -e "\n========== Cluster Status ==========" ;sudo docker exec $dockerid rabbitmqctl cluster_status'
 
 NODE=$(openstack server list --name controller-0 -f value -c Networks | cut -d= -f2); ssh heat-admin@$NODE "sudo pcs status" # check Pacemaker resource health
 
